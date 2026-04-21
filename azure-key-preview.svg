@@ -1,0 +1,87 @@
+<svg width="1440" height="1800" viewBox="0 0 1440 1800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="720" y1="0" x2="720" y2="1800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#F8F6F1"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="120" y1="120" x2="1320" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF9EC"/>
+      <stop offset="0.45" stop-color="#DDD1FF"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#1D2340" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="1800" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="60" width="1300" height="560" rx="38" fill="url(#hero)"/>
+    <text x="120" y="132" fill="#667089" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">UPDATED KEY MOOD</text>
+    <text x="120" y="240" fill="#1D2340" font-family="Georgia, serif" font-size="86">The Azure Phuket</text>
+    <text x="120" y="340" fill="#1D2340" font-family="Georgia, serif" font-size="94">Soft luxury with</text>
+    <text x="120" y="430" fill="#1D2340" font-family="Georgia, serif" font-size="102" font-style="italic">wellness clarity</text>
+    <text x="120" y="500" fill="#5F6478" font-family="Arial, sans-serif" font-size="28">Bright luxury system with navy identity, lilac shimmer, sea-glass freshness,</text>
+    <text x="120" y="538" fill="#5F6478" font-family="Arial, sans-serif" font-size="28">and gold reserved for premium actions.</text>
+
+    <rect x="930" y="120" width="320" height="190" rx="28" fill="#FFFFFF" fill-opacity="0.72" stroke="#E7E0D3"/>
+    <text x="962" y="166" fill="#667089" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">KEY TONE</text>
+    <text x="962" y="220" fill="#1D2340" font-family="Georgia, serif" font-size="42">Luxury wellness-tech</text>
+    <text x="962" y="272" fill="#5F6478" font-family="Arial, sans-serif" font-size="22">Clean composition, resort lifestyle mood, app-ready brand language.</text>
+
+    <rect x="930" y="340" width="320" height="190" rx="28" fill="#FFFFFF" fill-opacity="0.72" stroke="#E7E0D3"/>
+    <text x="962" y="386" fill="#667089" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">VISUAL DNA</text>
+    <text x="962" y="438" fill="#1D2340" font-family="Arial, sans-serif" font-size="24">Clean white base</text>
+    <text x="962" y="474" fill="#1D2340" font-family="Arial, sans-serif" font-size="24">Navy brand authority</text>
+    <text x="962" y="510" fill="#1D2340" font-family="Arial, sans-serif" font-size="24">Soft pastel premium layers</text>
+  </g>
+
+  <text x="84" y="740" fill="#667089" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">PALETTE</text>
+
+  <g filter="url(#shadow)">
+    <rect x="84" y="772" width="236" height="246" rx="28" fill="#D4AF37"/>
+    <text x="114" y="954" fill="#1D2340" font-family="Arial, sans-serif" font-size="18">#D4AF37</text>
+    <text x="114" y="992" fill="#1D2340" font-family="Georgia, serif" font-size="36">Dusk Gold</text>
+
+    <rect x="344" y="772" width="236" height="246" rx="28" fill="#DCD0FF"/>
+    <text x="374" y="954" fill="#1D2340" font-family="Arial, sans-serif" font-size="18">#DCD0FF</text>
+    <text x="374" y="992" fill="#1D2340" font-family="Georgia, serif" font-size="36">Evening Lilac</text>
+
+    <rect x="604" y="772" width="236" height="246" rx="28" fill="#AFEEEE"/>
+    <text x="634" y="954" fill="#1D2340" font-family="Arial, sans-serif" font-size="18">#AFEEEE</text>
+    <text x="634" y="992" fill="#1D2340" font-family="Georgia, serif" font-size="36">Sea Glass</text>
+
+    <rect x="864" y="772" width="236" height="246" rx="28" fill="#1D2340"/>
+    <text x="894" y="954" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="18">#1D2340</text>
+    <text x="894" y="992" fill="#FFFFFF" font-family="Georgia, serif" font-size="36">Azure Navy</text>
+
+    <rect x="1124" y="772" width="236" height="246" rx="28" fill="#F8F6F1"/>
+    <text x="1154" y="954" fill="#1D2340" font-family="Arial, sans-serif" font-size="18">#F8F6F1</text>
+    <text x="1154" y="992" fill="#1D2340" font-family="Georgia, serif" font-size="36">Cloud Ivory</text>
+  </g>
+
+  <text x="84" y="1120" fill="#667089" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">SYSTEM</text>
+
+  <g filter="url(#shadow)">
+    <rect x="84" y="1152" width="404" height="248" rx="28" fill="#FFFFFF" stroke="#E7E0D3"/>
+    <text x="116" y="1198" fill="#667089" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">HERO STYLE</text>
+    <text x="116" y="1252" fill="#1D2340" font-family="Georgia, serif" font-size="42">Bright canvas</text>
+    <text x="116" y="1296" fill="#1D2340" font-family="Georgia, serif" font-size="42">iridescent glow</text>
+    <text x="116" y="1350" fill="#5F6478" font-family="Arial, sans-serif" font-size="22">Use pastel shimmer instead of dark cinematic walls.</text>
+
+    <rect x="518" y="1152" width="404" height="248" rx="28" fill="#FFFFFF" stroke="#E7E0D3"/>
+    <text x="550" y="1198" fill="#667089" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">BUTTON LOGIC</text>
+    <text x="550" y="1252" fill="#1D2340" font-family="Georgia, serif" font-size="42">Gold signals priority</text>
+    <text x="550" y="1350" fill="#5F6478" font-family="Arial, sans-serif" font-size="22">Keep gold for booking and premium confirmation moments.</text>
+
+    <rect x="952" y="1152" width="404" height="248" rx="28" fill="#1D2340"/>
+    <text x="984" y="1198" fill="#DCD0FF" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">IDENTITY</text>
+    <text x="984" y="1252" fill="#FFFFFF" font-family="Georgia, serif" font-size="42">Navy keeps authority</text>
+    <text x="984" y="1350" fill="#EEF2FF" font-family="Arial, sans-serif" font-size="22">Pastels feel premium only when anchored by confident navy typography.</text>
+  </g>
+
+  <text x="84" y="1500" fill="#667089" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">EXPERIENCE</text>
+  <text x="84" y="1564" fill="#1D2340" font-family="Georgia, serif" font-size="62">Cleaner, brighter, more unified</text>
+  <text x="84" y="1620" fill="#5F6478" font-family="Arial, sans-serif" font-size="28">This key works better across website, app, concierge flows, signage, and branded merchandise.</text>
+</svg>
