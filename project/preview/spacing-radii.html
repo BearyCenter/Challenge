@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #F8F6F1; font-family: "Manrope", sans-serif; padding: 20px 24px; }
+.grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.shape { width: 60px; height: 60px; background: white; border: 1px solid rgba(29,35,64,0.15); }
+.label { font-size: 10px; color: #5F6478; letter-spacing: 0.1em; text-align: center; }
+.val { font-size: 11px; font-weight: 600; color: #1D2340; text-align: center; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="item">
+    <div class="shape" style="border-radius:8px;"></div>
+    <span class="val">8px</span>
+    <span class="label">--radius-sm</span>
+  </div>
+  <div class="item">
+    <div class="shape" style="border-radius:16px;"></div>
+    <span class="val">16px</span>
+    <span class="label">--radius-md</span>
+  </div>
+  <div class="item">
+    <div class="shape" style="border-radius:26px;"></div>
+    <span class="val">26px</span>
+    <span class="label">--radius-lg</span>
+  </div>
+  <div class="item">
+    <div class="shape" style="border-radius:34px;"></div>
+    <span class="val">34px</span>
+    <span class="label">--radius-xl</span>
+  </div>
+  <div class="item" style="grid-column:span 4; flex-direction:row; justify-content:center; gap:24px; align-items:center;">
+    <div style="width:100px; height:40px; background:white; border-radius:999px; border:1px solid rgba(29,35,64,0.15);"></div>
+    <div><span class="val">999px pill</span><br><span class="label">--radius-pill · all buttons</span></div>
+  </div>
+</div>
+</body>
+</html>

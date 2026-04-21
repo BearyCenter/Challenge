@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #F8F6F1; font-family: "Manrope", sans-serif; padding: 20px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.badge { border-radius: 999px; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; width: fit-content; }
+.tag-gold { background: rgba(212,175,55,0.15); color: #A8891E; border: 1px solid rgba(212,175,55,0.3); }
+.tag-lilac { background: rgba(220,208,255,0.5); color: #5D4E8A; border: 1px solid rgba(220,208,255,0.8); }
+.tag-sea { background: rgba(175,238,238,0.45); color: #2C7A7A; border: 1px solid rgba(175,238,238,0.8); }
+.tag-navy { background: #1D2340; color: white; }
+.tag-dark { background: #111522; color: rgba(255,255,255,0.8); }
+.tag-outline { background: transparent; color: #1D2340; border: 1.5px solid rgba(29,35,64,0.25); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.section { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: white; border: 1px solid rgba(29,35,64,0.08); }
+.section-title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #5F6478; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="section">
+    <p class="section-title">Status Badges</p>
+    <span class="badge tag-gold"><span class="dot"></span>Confirmed</span>
+    <span class="badge tag-sea"><span class="dot"></span>Available</span>
+    <span class="badge tag-dark"><span class="dot"></span>Exclusive</span>
+  </div>
+  <div class="section">
+    <p class="section-title">Category Tags</p>
+    <span class="badge tag-lilac">Wellness</span>
+    <span class="badge tag-sea">Concierge</span>
+    <span class="badge tag-gold">Premium</span>
+  </div>
+  <div class="section">
+    <p class="section-title">UI Labels</p>
+    <span class="badge tag-navy">Villa Access</span>
+    <span class="badge tag-outline">Add to Itinerary</span>
+    <span class="badge tag-outline">Members Only</span>
+  </div>
+</div>
+</body>
+</html>

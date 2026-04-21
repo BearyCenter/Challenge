@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #eceae5; font-family: "Manrope", sans-serif; padding: 20px 24px; }
+.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.card { background: #F8F6F1; border-radius: 18px; padding: 16px 14px; }
+.label { font-size: 10px; color: #5F6478; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+.name { font-size: 12px; font-weight: 600; color: #1D2340; margin-bottom: 4px; }
+.val { font-size: 10px; color: #5F6478; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="card" style="box-shadow:0 4px 16px rgba(17,21,34,0.08);">
+    <p class="label">--shadow-sm</p>
+    <p class="name">Subtle</p>
+    <p class="val">0 4px 16px rgba(17,21,34,.08)</p>
+  </div>
+  <div class="card" style="box-shadow:0 24px 64px rgba(17,21,34,0.12);">
+    <p class="label">--shadow-md</p>
+    <p class="name">Standard</p>
+    <p class="val">0 24px 64px rgba(17,21,34,.12)</p>
+  </div>
+  <div class="card" style="box-shadow:0 32px 84px rgba(9,11,22,0.38);">
+    <p class="label">--shadow-lg</p>
+    <p class="name">Cinematic</p>
+    <p class="val">0 32px 84px rgba(9,11,22,.38)</p>
+  </div>
+  <div class="card" style="box-shadow:0 16px 32px rgba(212,175,55,0.28); background:#D4AF37;">
+    <p class="label" style="color:rgba(17,21,34,0.6);">--shadow-gold</p>
+    <p class="name" style="color:#111522;">Gold Glow</p>
+    <p class="val" style="color:rgba(17,21,34,0.55);">0 16px 32px rgba(212,175,55,.24)</p>
+  </div>
+  <div class="card" style="background:rgba(255,255,255,0.82); backdrop-filter:blur(16px); border:1px solid rgba(29,35,64,0.10); grid-column:span 2;">
+    <p class="label">Glassmorphism panel</p>
+    <p class="name">rgba(255,255,255,0.82) + backdrop-filter: blur(16px)</p>
+    <p class="val">Used on all light-surface panels and section cards</p>
+  </div>
+</div>
+</body>
+</html>

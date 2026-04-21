@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #F8F6F1; font-family: "Manrope", sans-serif; padding: 20px; }
+.grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; align-items: stretch; }
+.logo-card { border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border: 1px solid rgba(29,35,64,0.10); min-height: 120px; }
+.light-bg { background: #F8F6F1; }
+.dark-bg { background: #111522; }
+.navy-bg { background: #1D2340; }
+.ivory-bg { background: #FFFDF9; border:1px solid rgba(29,35,64,0.12); }
+.logo-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+.light-bg .logo-label, .ivory-bg .logo-label { color: #5F6478; }
+.dark-bg .logo-label, .navy-bg .logo-label { color: rgba(255,255,255,0.45); }
+svg.mark { width: 48px; height: 48px; }
+.wordmark-text { font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: 18px; letter-spacing: 0.04em; }
+.sub-text { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <!-- Dark bg — white monogram -->
+  <div class="logo-card dark-bg">
+    <svg class="mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <style>.t{font-family:'Cormorant Garamond',serif;font-weight:500;fill:white;}</style>
+      <text x="30" y="145" font-size="120" class="t">A</text>
+      <line x1="95" y1="38" x2="115" y2="162" stroke="white" stroke-width="3"/>
+      <text x="100" y="145" font-size="120" class="t">P</text>
+    </svg>
+    <span class="logo-label">Monogram · Dark</span>
+  </div>
+  <!-- Light bg — navy monogram -->
+  <div class="logo-card ivory-bg">
+    <svg class="mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <style>.t2{font-family:'Cormorant Garamond',serif;font-weight:500;fill:#1D2340;}</style>
+      <text x="30" y="145" font-size="120" class="t2">A</text>
+      <line x1="95" y1="38" x2="115" y2="162" stroke="#1D2340" stroke-width="3"/>
+      <text x="100" y="145" font-size="120" class="t2">P</text>
+    </svg>
+    <span class="logo-label" style="color:#5F6478;">Monogram · Light</span>
+  </div>
+  <!-- Full wordmark dark -->
+  <div class="logo-card navy-bg">
+    <div style="text-align:center;">
+      <div class="wordmark-text" style="color:white;">The Azure</div>
+      <div class="sub-text" style="color:rgba(255,255,255,0.5);">Phuket</div>
+    </div>
+    <span class="logo-label">Wordmark · Dark</span>
+  </div>
+  <!-- Full wordmark light -->
+  <div class="logo-card light-bg">
+    <div style="text-align:center;">
+      <div class="wordmark-text" style="color:#1D2340;">The Azure</div>
+      <div class="sub-text" style="color:#5F6478;">Phuket</div>
+    </div>
+    <span class="logo-label">Wordmark · Light</span>
+  </div>
+</div>
+</body>
+</html>

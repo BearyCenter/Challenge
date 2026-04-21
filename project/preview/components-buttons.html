@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #1D2340; font-family: "Manrope", sans-serif; padding: 28px 24px; }
+.row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 20px; }
+.row:last-child { margin-bottom: 0; }
+.divider { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 10px; }
+button {
+  min-height: 48px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+.btn-primary { background: #D4AF37; color: #111522; box-shadow: 0 16px 32px rgba(212,175,55,0.28); }
+.btn-secondary { background: rgba(255,255,255,0.10); color: white; border: 1px solid rgba(255,255,255,0.18); }
+.btn-outline { background: transparent; color: #D4AF37; border: 1.5px solid #D4AF37; }
+.btn-ghost { background: transparent; color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.12); }
+.btn-sm { min-height: 36px; font-size: 12px; padding: 0 16px; }
+.btn-lg { min-height: 58px; font-size: 16px; padding: 0 32px; }
+button:hover { opacity: 0.88; }
+button:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+  <p class="divider">On Dark — Primary CTAs</p>
+  <div class="row">
+    <button class="btn-primary btn-sm">Reserve</button>
+    <button class="btn-primary">Reserve Your Villa</button>
+    <button class="btn-primary btn-lg">Reserve Your Villa</button>
+  </div>
+  <p class="divider">On Dark — Secondary</p>
+  <div class="row">
+    <button class="btn-secondary">View Components</button>
+    <button class="btn-outline">See Palette</button>
+    <button class="btn-ghost">Learn More</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #F8F6F1; font-family: "Manrope", sans-serif; padding: 20px 24px; }
+.row { display: flex; align-items: center; gap: 20px; padding: 7px 0; border-bottom: 1px solid rgba(29,35,64,0.07); }
+.row:last-child { border-bottom: none; }
+.label { font-size: 10px; color: #5F6478; letter-spacing: 0.14em; text-transform: uppercase; min-width: 90px; }
+.token { font-size: 11px; font-weight: 600; color: #1D2340; min-width: 80px; }
+.bar-wrap { flex: 1; display: flex; align-items: center; gap: 8px; }
+.bar { height: 8px; background: #1D2340; border-radius: 4px; }
+.val { font-size: 11px; color: #5F6478; }
+</style>
+</head>
+<body>
+  <div class="row"><span class="label">--space-2</span><span class="token">0.5rem</span><div class="bar-wrap"><div class="bar" style="width:8px"></div><span class="val">8px</span></div></div>
+  <div class="row"><span class="label">--space-3</span><span class="token">0.75rem</span><div class="bar-wrap"><div class="bar" style="width:12px"></div><span class="val">12px</span></div></div>
+  <div class="row"><span class="label">--space-4</span><span class="token">1rem</span><div class="bar-wrap"><div class="bar" style="width:16px"></div><span class="val">16px</span></div></div>
+  <div class="row"><span class="label">--space-5</span><span class="token">1.25rem</span><div class="bar-wrap"><div class="bar" style="width:20px"></div><span class="val">20px</span></div></div>
+  <div class="row"><span class="label">--space-6</span><span class="token">1.5rem</span><div class="bar-wrap"><div class="bar" style="width:24px"></div><span class="val">24px</span></div></div>
+  <div class="row"><span class="label">--space-8</span><span class="token">2rem</span><div class="bar-wrap"><div class="bar" style="width:32px"></div><span class="val">32px</span></div></div>
+  <div class="row"><span class="label">--space-10</span><span class="token">2.5rem</span><div class="bar-wrap"><div class="bar" style="width:40px"></div><span class="val">40px</span></div></div>
+  <div class="row"><span class="label">--space-12</span><span class="token">3rem</span><div class="bar-wrap"><div class="bar" style="width:48px"></div><span class="val">48px</span></div></div>
+  <div class="row"><span class="label">--space-16</span><span class="token">4rem</span><div class="bar-wrap"><div class="bar" style="width:64px"></div><span class="val">64px</span></div></div>
+</body>
+</html>

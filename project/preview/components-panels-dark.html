@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #111522; font-family: "Manrope", sans-serif; padding: 20px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.panel { border-radius: 22px; padding: 18px; border: 1px solid rgba(255,255,255,0.10); }
+.dark-glass { background: linear-gradient(135deg,rgba(17,21,34,0.72),rgba(37,44,75,0.62),rgba(86,70,104,0.42)); backdrop-filter:blur(12px); }
+.lilac-glass { background: linear-gradient(135deg,rgba(220,208,255,0.14),rgba(175,238,238,0.08)); backdrop-filter:blur(12px); border-color:rgba(220,208,255,0.2); }
+.gold-glass { background: linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.04)); backdrop-filter:blur(12px); border-color:rgba(212,175,55,0.22); }
+.navy-solid { background: rgba(29,35,64,0.9); }
+.kicker { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+h3 { font-family: "Cormorant Garamond", serif; font-size: 18px; font-weight: 500; color: white; margin-bottom: 5px; line-height: 1.15; }
+p { font-size: 12px; color: rgba(255,255,255,0.62); line-height: 1.6; }
+.gold-val { color: #D4AF37; font-size: 24px; font-family: "Cormorant Garamond", serif; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="panel dark-glass">
+    <p class="kicker">Dark Glass</p>
+    <h3>Cinematic hero panel</h3>
+    <p>Navy-to-midnight gradient, frosted with lilac reflection shimmer.</p>
+  </div>
+  <div class="panel lilac-glass">
+    <p class="kicker">Lilac Glass</p>
+    <h3>Wellness module</h3>
+    <p>Soft lilac and sea-glass tint for spa and concierge surfaces.</p>
+  </div>
+  <div class="panel gold-glass">
+    <p class="kicker">Gold Glass</p>
+    <div class="gold-val">THB 42,000</div>
+    <p>Used for booking confirmation, pricing callouts.</p>
+  </div>
+  <div class="panel navy-solid">
+    <p class="kicker">Navy Solid</p>
+    <h3>VIP member status</h3>
+    <p>Premium opaque surface for membership and identity moments.</p>
+  </div>
+</div>
+</body>
+</html>

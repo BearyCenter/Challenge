@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #F8F6F1; font-family: "Manrope", sans-serif; padding: 20px; }
+.grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; }
+.swatch { border-radius: 16px; padding: 14px 12px 12px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid rgba(0,0,0,0.06); }
+.swatch .hex { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.65; margin-bottom: 3px; }
+.swatch .name { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; }
+.swatch .role { font-size: 10px; opacity: 0.6; margin-top: 3px; line-height: 1.4; }
+.light { color: #1D2340; }
+.dark  { color: #fff; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="swatch light" style="background:#D4AF37;">
+    <span class="hex">#D4AF37</span>
+    <span class="name">Dusk Gold</span>
+    <span class="role">CTA · highlights</span>
+  </div>
+  <div class="swatch light" style="background:#DCD0FF;">
+    <span class="hex">#DCD0FF</span>
+    <span class="name">Evening Lilac</span>
+    <span class="role">Shimmer · wellness</span>
+  </div>
+  <div class="swatch light" style="background:#AFEEEE;">
+    <span class="hex">#AFEEEE</span>
+    <span class="name">Sea Glass</span>
+    <span class="role">Concierge · fresh</span>
+  </div>
+  <div class="swatch dark" style="background:#1D2340;">
+    <span class="hex">#1D2340</span>
+    <span class="name">Azure Navy</span>
+    <span class="role">Logo · headlines</span>
+  </div>
+  <div class="swatch dark" style="background:#111522;">
+    <span class="hex">#111522</span>
+    <span class="name">Midnight Ink</span>
+    <span class="role">Hero · cinematic</span>
+  </div>
+  <div class="swatch light" style="background:#F8F6F1; border:1px solid rgba(29,35,64,0.14);">
+    <span class="hex">#F8F6F1</span>
+    <span class="name">Cloud Ivory</span>
+    <span class="role">Light background</span>
+  </div>
+</div>
+</body>
+</html>

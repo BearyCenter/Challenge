@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #F8F6F1; font-family: "Manrope", sans-serif; padding: 20px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.card { border-radius: 26px; padding: 20px; border: 1px solid rgba(29,35,64,0.10); box-shadow: 0 24px 64px rgba(17,21,34,0.10); }
+.card-light { background: rgba(255,255,255,0.85); }
+.card-featured { background: linear-gradient(135deg,rgba(255,255,255,0.86),rgba(220,208,255,0.5),rgba(29,35,64,0.06)); }
+.card-dark { background: linear-gradient(180deg,rgba(17,21,34,0.96),rgba(29,35,64,0.94)); border-color: rgba(255,255,255,0.12); }
+.card-navy { background: #1D2340; border-color: rgba(255,255,255,0.12); }
+.card-glass { background: linear-gradient(135deg,rgba(17,21,34,0.72),rgba(37,44,75,0.62),rgba(86,70,104,0.42)); border-color: rgba(255,255,255,0.14); backdrop-filter:blur(12px); }
+.kicker { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 6px; }
+.light-text .kicker { color: #5F6478; }
+.dark-text .kicker { color: rgba(255,255,255,0.55); }
+h3 { font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: 18px; line-height: 1.15; margin-bottom: 6px; }
+.light-text h3 { color: #1D2340; }
+.dark-text h3 { color: white; }
+p { font-size: 12px; line-height: 1.65; }
+.light-text p { color: #5F6478; }
+.dark-text p { color: rgba(255,255,255,0.68); }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="card card-light light-text">
+    <p class="kicker">Light Card</p>
+    <h3>Airy villa booking</h3>
+    <p>Standard ivory card. Used for browsing, forms, and utility content.</p>
+  </div>
+  <div class="card card-featured light-text">
+    <p class="kicker">Featured · Shimmer</p>
+    <h3>Evening Lilac surface</h3>
+    <p>Lilac + sea-glass gradient wash. Wellness modules, featured offers.</p>
+  </div>
+  <div class="card card-glass dark-text">
+    <p class="kicker">Dark Glass</p>
+    <h3>Cinematic overlay</h3>
+    <p>Frosted navy glass panel. Hero sidebar, concierge panels.</p>
+  </div>
+  <div class="card card-dark dark-text">
+    <p class="kicker">Dark Card</p>
+    <h3>Midnight villa depth</h3>
+    <p>Navy-to-midnight. Hero storytelling, premium experience modules.</p>
+  </div>
+  <div class="card card-navy dark-text">
+    <p class="kicker">Navy Card</p>
+    <h3>Brand identity moments</h3>
+    <p>Solid Azure Navy. Membership, VIP status, concierge callouts.</p>
+  </div>
+  <div class="card card-light light-text" style="border:1.5px solid #D4AF37;">
+    <p class="kicker" style="color:#A8891E;">Gold Accent Card</p>
+    <h3>Confirmation state</h3>
+    <p>Gold border on white. Booking confirmed, active reservation.</p>
+  </div>
+</div>
+</body>
+</html>

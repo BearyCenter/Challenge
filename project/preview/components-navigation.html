@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+* { box-sizing: border-box; margin: 0; }
+body { background: #1a1d2b; font-family: "Manrope", sans-serif; padding: 24px; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 0 8px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.monogram { width: 44px; height: 44px; background: rgba(255,255,255,0.06); border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; }
+.monogram svg { width: 28px; height: 28px; }
+.wordmark { display: flex; flex-direction: column; gap: 1px; }
+.wm-top { font-family: "Cormorant Garamond", serif; font-size: 22px; font-weight: 500; color: white; line-height: 1; letter-spacing: 0.04em; }
+.wm-sub { font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+.links { display: flex; gap: 28px; }
+.links a { font-size: 13px; color: rgba(255,255,255,0.75); text-decoration: none; letter-spacing: 0.04em; }
+.links a:hover { color: #D4AF37; }
+.cta { background: #D4AF37; color: #111522; font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 999px; text-decoration: none; }
+
+.divider { margin: 20px 0 14px; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+
+.light-nav { background: #F8F6F1; border-radius: 20px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
+.light-nav .links a { color: #5F6478; }
+.light-nav .links a:hover { color: #1D2340; }
+</style>
+</head>
+<body>
+  <p class="divider">Navigation — Dark Hero Context</p>
+  <div class="nav">
+    <div class="brand">
+      <div class="monogram">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <style>.t{font-family:'Cormorant Garamond',serif;font-weight:500;fill:white;}</style>
+          <text x="30" y="145" font-size="120" class="t">A</text>
+          <line x1="95" y1="38" x2="115" y2="162" stroke="white" stroke-width="3"/>
+          <text x="100" y="145" font-size="120" class="t">P</text>
+        </svg>
+      </div>
+      <div class="wordmark">
+        <span class="wm-top">The Azure</span>
+        <span class="wm-sub">Phuket</span>
+      </div>
+    </div>
+    <div class="links">
+      <a href="#">Villas</a>
+      <a href="#">Wellness</a>
+      <a href="#">Dining</a>
+      <a href="#">Concierge</a>
+    </div>
+    <a class="cta" href="#">Reserve</a>
+  </div>
+
+  <p class="divider">Navigation — Light Surface</p>
+  <div class="light-nav">
+    <div class="brand">
+      <div class="wordmark">
+        <span class="wm-top" style="color:#1D2340;">The Azure</span>
+        <span class="wm-sub" style="color:#5F6478;">Phuket</span>
+      </div>
+    </div>
+    <div class="links">
+      <a href="#" style="color:#5F6478;">Villas</a>
+      <a href="#" style="color:#5F6478;">Wellness</a>
+      <a href="#" style="color:#5F6478;">Dining</a>
+      <a href="#" style="color:#5F6478;">Concierge</a>
+    </div>
+    <a class="cta" href="#">Reserve</a>
+  </div>
+</body>
+</html>
