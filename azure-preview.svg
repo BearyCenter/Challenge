@@ -1,0 +1,115 @@
+<svg width="1440" height="2200" viewBox="0 0 1440 2200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="720" y1="0" x2="720" y2="2200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#978DBE"/>
+      <stop offset="0.18" stop-color="#F1CF91"/>
+      <stop offset="0.42" stop-color="#FBF7F2"/>
+      <stop offset="1" stop-color="#F6EFE8"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="190" y1="150" x2="1240" y2="780" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1C2231"/>
+      <stop offset="0.52" stop-color="#5B4450"/>
+      <stop offset="1" stop-color="#E7B479"/>
+    </linearGradient>
+    <linearGradient id="sunset" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8F84B8"/>
+      <stop offset="0.42" stop-color="#B09BC4"/>
+      <stop offset="0.75" stop-color="#F1BC84"/>
+      <stop offset="1" stop-color="#F7E4AE"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#1C2231" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="2200" fill="url(#bg)"/>
+  <rect x="56" y="42" width="1328" height="2100" rx="40" fill="#FBF7F2" fill-opacity="0.52"/>
+
+  <g filter="url(#shadow)">
+    <rect x="96" y="72" width="1248" height="760" rx="38" fill="url(#hero)"/>
+    <text x="148" y="154" fill="#F9F4EE" font-family="Georgia, serif" font-size="22" letter-spacing="4">LUXURY POOL VILLA BOOKING</text>
+    <text x="148" y="210" fill="#FFF9F2" font-family="Georgia, serif" font-size="44">The Azure Phuket</text>
+    <text x="148" y="334" fill="#FFF9F2" font-family="Georgia, serif" font-size="110">Sunset luxury for</text>
+    <text x="148" y="430" fill="#F7E4AE" font-family="Georgia, serif" font-size="122" font-style="italic">private villa escapes</text>
+    <text x="148" y="512" fill="#F8F0E9" font-family="Arial, sans-serif" font-size="28">Luxury interior mood inspired by Phuket dusk, soft glass reflections,</text>
+    <text x="148" y="550" fill="#F8F0E9" font-family="Arial, sans-serif" font-size="28">warm resort lighting, and villa-scale private hospitality.</text>
+
+    <rect x="148" y="610" width="240" height="64" rx="32" fill="#F7E4AE"/>
+    <text x="194" y="651" fill="#1C2231" font-family="Arial, sans-serif" font-size="24" font-weight="700">Explore Tokens</text>
+    <rect x="406" y="610" width="218" height="64" rx="32" fill="#FFFFFF" fill-opacity="0.12" stroke="#FFFFFF" stroke-opacity="0.22"/>
+    <text x="460" y="651" fill="#FFF9F2" font-family="Arial, sans-serif" font-size="24" font-weight="700">View Modules</text>
+
+    <rect x="890" y="162" width="374" height="332" rx="28" fill="#FFFFFF" fill-opacity="0.12" stroke="#FFFFFF" stroke-opacity="0.16"/>
+    <text x="924" y="214" fill="#FFF7EE" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">BASE WEBSITE MOOD</text>
+    <text x="924" y="266" fill="#FFFFFF" font-family="Georgia, serif" font-size="52">Yellow-violet dusk</text>
+    <text x="924" y="314" fill="#FFF6EF" font-family="Arial, sans-serif" font-size="22">Soft sunlight, muted violet sky,</text>
+    <text x="924" y="346" fill="#FFF6EF" font-family="Arial, sans-serif" font-size="22">natural wood, premium quietness.</text>
+    <rect x="924" y="382" width="306" height="82" rx="24" fill="url(#sunset)"/>
+
+    <rect x="890" y="528" width="374" height="196" rx="28" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.16"/>
+    <text x="924" y="580" fill="#FFF7EE" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">SIGNATURE PROMISE</text>
+    <text x="924" y="632" fill="#FFFFFF" font-family="Georgia, serif" font-size="44">Private villa,</text>
+    <text x="924" y="680" fill="#FFFFFF" font-family="Georgia, serif" font-size="44">resort-grade service</text>
+  </g>
+
+  <text x="104" y="934" fill="#8C7F86" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">FOUNDATION</text>
+  <text x="104" y="1000" fill="#1C2231" font-family="Georgia, serif" font-size="74">Brand DNA and visual language</text>
+
+  <g filter="url(#shadow)">
+    <rect x="104" y="1050" width="598" height="254" rx="28" fill="#FFFFFF" fill-opacity="0.72" stroke="#D8CCC8"/>
+    <text x="140" y="1100" fill="#7E5A49" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">MOOD &amp; TONE</text>
+    <text x="140" y="1160" fill="#1C2231" font-family="Arial, sans-serif" font-size="26">Quiet luxury with airy coastal breathing room</text>
+    <text x="140" y="1208" fill="#1C2231" font-family="Arial, sans-serif" font-size="26">Editorial interior styling, not generic resort tropes</text>
+    <text x="140" y="1256" fill="#1C2231" font-family="Arial, sans-serif" font-size="26">Warm service cues through light and translucency</text>
+
+    <rect x="738" y="1050" width="606" height="254" rx="28" fill="#FFFFFF" fill-opacity="0.72" stroke="#D8CCC8"/>
+    <text x="774" y="1100" fill="#7E5A49" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">TYPOGRAPHY</text>
+    <text x="774" y="1170" fill="#1C2231" font-family="Georgia, serif" font-size="50">Cormorant elegance</text>
+    <text x="774" y="1220" fill="#5D5A67" font-family="Arial, sans-serif" font-size="26">Manrope clarity for booking flows, villa details, and concierge messaging.</text>
+  </g>
+
+  <text x="104" y="1420" fill="#8C7F86" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">PALETTE</text>
+  <g filter="url(#shadow)">
+    <rect x="104" y="1452" width="198" height="254" rx="28" fill="#F7E4AE"/>
+    <text x="132" y="1654" fill="#1C2231" font-family="Arial, sans-serif" font-size="18">#F7E4AE</text>
+    <text x="132" y="1692" fill="#1C2231" font-family="Georgia, serif" font-size="34">Dusk Gold</text>
+
+    <rect x="320" y="1452" width="198" height="254" rx="28" fill="#9387B8"/>
+    <text x="348" y="1654" fill="#FFF9F2" font-family="Arial, sans-serif" font-size="18">#9387B8</text>
+    <text x="348" y="1692" fill="#FFF9F2" font-family="Georgia, serif" font-size="34">Evening Lilac</text>
+
+    <rect x="536" y="1452" width="198" height="254" rx="28" fill="#8BB7D6"/>
+    <text x="564" y="1654" fill="#1C2231" font-family="Arial, sans-serif" font-size="18">#8BB7D6</text>
+    <text x="564" y="1692" fill="#1C2231" font-family="Georgia, serif" font-size="34">Sea Glass</text>
+
+    <rect x="752" y="1452" width="198" height="254" rx="28" fill="#F6EFE8"/>
+    <text x="780" y="1654" fill="#1C2231" font-family="Arial, sans-serif" font-size="18">#F6EFE8</text>
+    <text x="780" y="1692" fill="#1C2231" font-family="Georgia, serif" font-size="34">Villa Sand</text>
+
+    <rect x="968" y="1452" width="198" height="254" rx="28" fill="#7E5A49"/>
+    <text x="996" y="1654" fill="#FFF9F2" font-family="Arial, sans-serif" font-size="18">#7E5A49</text>
+    <text x="996" y="1692" fill="#FFF9F2" font-family="Georgia, serif" font-size="34">Teak Shadow</text>
+
+    <rect x="1184" y="1452" width="160" height="254" rx="28" fill="#1C2231"/>
+    <text x="1210" y="1654" fill="#FFF9F2" font-family="Arial, sans-serif" font-size="18">#1C2231</text>
+    <text x="1210" y="1692" fill="#FFF9F2" font-family="Georgia, serif" font-size="34">Midnight</text>
+  </g>
+
+  <text x="104" y="1828" fill="#8C7F86" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">COMPONENTS</text>
+  <g filter="url(#shadow)">
+    <rect x="104" y="1860" width="388" height="226" rx="28" fill="#FFFFFF" fill-opacity="0.78" stroke="#D8CCC8"/>
+    <text x="140" y="1910" fill="#7E5A49" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">HERO MODULE</text>
+    <text x="140" y="1966" fill="#1C2231" font-family="Georgia, serif" font-size="44">Immersive villa storytelling</text>
+    <text x="140" y="2022" fill="#5D5A67" font-family="Arial, sans-serif" font-size="24">Large display type, panoramic media, and soft glass support panels.</text>
+
+    <rect x="526" y="1860" width="388" height="226" rx="28" fill="#FFFFFF" fill-opacity="0.78" stroke="#D8CCC8"/>
+    <text x="562" y="1910" fill="#7E5A49" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">EDITORIAL CARDS</text>
+    <text x="562" y="1966" fill="#1C2231" font-family="Georgia, serif" font-size="44">Curated, not transactional</text>
+    <text x="562" y="2022" fill="#5D5A67" font-family="Arial, sans-serif" font-size="24">Rounded image-led cards with warm shadows and premium spacing.</text>
+
+    <rect x="948" y="1860" width="396" height="226" rx="28" fill="#1C2231"/>
+    <text x="984" y="1910" fill="#F4DFA3" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">BOOKING PANELS</text>
+    <text x="984" y="1966" fill="#FFF9F2" font-family="Georgia, serif" font-size="44">High clarity, low friction</text>
+    <text x="984" y="2022" fill="#F7F0E9" font-family="Arial, sans-serif" font-size="24">Darker contrast blocks for dates, rates, villa count, and confirmation flow.</text>
+  </g>
+<\/svg>
