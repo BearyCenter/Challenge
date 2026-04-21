@@ -1,113 +1,70 @@
-# The Azure Phuket Pool Villa Resort
+# The Azure Phuket
 
-## Brand Direction
+## Updated Hybrid Mood
 
-The website should feel like a private sunset arrival at a high-end villa in Phuket:
+This version keeps the newer key visual palette, but brings part of the original
+dark luxury mood back into the system.
 
-- luxury but restrained
-- tropical but not loud
-- serene, editorial, and architectural
-- premium service communicated through light, spacing, and materiality
+The brand should now feel:
 
-The attached Mellow references suggest the right emotional base:
+- luxurious and cinematic at first glance
+- clean and premium in functional flows
+- brighter than the first dark concept, but not flat or overly pastel
+- suitable for website, app, concierge UI, and physical brand assets
 
-- sky tones that move from soft yellow into muted violet
-- warm interior wood and textured fabric
-- clean glass reflections and premium quietness
+## Core Color Palette
 
-## Mood Keywords
-
-- Sunset sanctuary
-- Warm horizon
-- Editorial resort
-- Architectural calm
-- Private hospitality
-
-## Color System
-
-| Token | Hex | Usage |
+| Token | Hex | Role |
 |---|---|---|
-| `--color-primary` | `#F7E4AE` | Premium highlight, CTA emphasis, gold light |
-| `--color-secondary` | `#9387B8` | Twilight overlays, atmospheric gradients |
-| `--color-accent` | `#8BB7D6` | Air, openness, coastal balance |
-| `--surface-base` | `#F6EFE8` | Main page background |
-| `--surface-soft` | `#FBF7F2` | Elevated editorial sections |
-| `--ink-strong` | `#1C2231` | Primary text and dark modules |
-| `--ink-soft` | `#5D5A67` | Supporting copy |
-| `--color-highlight` | `#FFC87B` | Warm action points and sunset glow |
-| `--wood-shadow` | `#7E5A49` | Deep earthy surfaces and dividers |
+| `Dusk Gold` | `#D4AF37` | key CTA, premium highlight, confirmation state |
+| `Evening Lilac` | `#DCD0FF` | shimmer, reflection, soft atmospheric depth |
+| `Sea Glass` | `#AFEEEE` | wellness, concierge, freshness cue |
+| `Azure Navy` | `#1D2340` | logo, headline ink, premium navigation |
+| `Midnight Ink` | `#111522` | dark hero layer, cinematic overlay, luxury storytelling |
+| `Cloud Ivory` | `#F8F6F1` | bright reading surface and clean layout base |
 
-## Typography
+## Tone Strategy
 
-- Display: `Cormorant Garamond`, fallback `Palatino Linotype`, serif
-- Body/UI: `Manrope`, fallback `Aptos`, `Segoe UI`, sans-serif
+### Light system
 
-### Typographic Intent
+- use for core layouts, booking UI, dashboard modules, and utility content
+- keep the interface calm, legible, and premium
 
-- Headlines should feel cinematic, elegant, and slightly sensual
-- Body text should remain modern, precise, and easy to scan in booking flows
-- Use italic serif moments selectively for emotional emphasis
+### Dark system
 
-## Layout Principles
+- use for hero banners, property storytelling, concierge highlights, testimonials, and campaign moments
+- this layer restores emotional drama and high-end resort mood
 
-- generous whitespace
-- rounded large containers
-- translucent layered surfaces
-- panoramic hero sections
-- calm reading rhythm with wide margins
+## Logo Usage
 
-## Component Guidance
+- use `logo_full.svg` on hero, headers, presentations, and premium brand surfaces
+- use `logo.svg` as compact mark for favicon, app icon treatment, social avatar, and dark overlays
+- on dark backgrounds, invert the logo to white
+- on ivory or clean surfaces, keep the logo in navy or near-black
 
-### Hero
+## Recommended UI Behavior
 
-- full-width atmospheric background
-- oversized serif statement
-- 1 primary CTA and 1 secondary CTA
-- glass panel for trust or service summary
+### Homepage
 
-### Villa Cards
+- open with a darker cinematic hero
+- transition into lighter editorial sections for exploration and trust
+- use gold on the main action only
 
-- editorial image-first layout
-- subtle metadata, not crowded badges
-- one standout rate or experience detail
+### Villa and Concierge Modules
 
-### Concierge Modules
+- dark cards can be used to communicate exclusivity
+- sea-glass and lilac should soften wellness and service modules
+- avoid using all pastel or all dark across one page
 
-- use gold or warm gradient accents
-- keep service descriptions short and premium
-- emphasize chef, butler, airport transfer, private experiences
+### Dashboard / App
 
-### Booking UI
+- keep the base interface bright
+- use dark widgets for membership, VIP, booking status, and premium service shortcuts
 
-- slightly darker surfaces for contrast
-- strong readability over imagery
-- restrained use of accent color only on active choices or confirmation
+## Visual Principles
 
-## Motion
-
-- slow fade and rise transitions
-- soft parallax or glow only where it supports luxury atmosphere
-- avoid playful bouncy interactions
-
-## Do / Don't
-
-### Do
-
-- use layered gradients based on yellow-violet dusk
-- keep imagery calm, premium, and architectural
-- use typography contrast to separate emotion from information
-- let spacing communicate luxury
-
-### Don't
-
-- overuse bright tropical greens or saturated blues
-- use heavy black blocks without soft light balance
-- crowd cards with too many icons or labels
-- make it feel like a mass-market booking portal
-
-## Deliverables in This Folder
-
-- [index.html](C:\Users\Aoftimuz\Documents\GitHub\Challenge2\Challenge2\index.html)
-- [styles.css](C:\Users\Aoftimuz\Documents\GitHub\Challenge2\Challenge2\styles.css)
-
-Open `index.html` in a browser to review the theme preview.
+- luxury contrast instead of full-time darkness
+- large rounded surfaces
+- navy typography as the stabilizing brand anchor
+- gold with restraint
+- pastel softness balanced by night-depth modules
