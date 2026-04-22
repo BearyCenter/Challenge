@@ -36,6 +36,14 @@
   }
   #loader.out { opacity: 0; visibility: hidden; }
   @keyframes loaderPulse { from { opacity: 0.3; } to { opacity: 1; } }
+  @keyframes giftShake {
+    0%, 70%, 100% { transform: rotate(0deg) translateX(0); }
+    74% { transform: rotate(-8deg) translateX(-1px); }
+    78% { transform: rotate(7deg) translateX(1px); }
+    82% { transform: rotate(-6deg) translateX(-1px); }
+    86% { transform: rotate(5deg) translateX(1px); }
+    90% { transform: rotate(-3deg) translateX(0); }
+  }
 
   /* ── Scroll reveal ── */
   .reveal { opacity: 0; transform: translateY(32px); transition: opacity 700ms cubic-bezier(0.25,0.46,0.45,0.94), transform 700ms cubic-bezier(0.25,0.46,0.45,0.94); }
@@ -158,6 +166,40 @@ const FEATURES = [
   "In-Villa Private Chef",
   "Floating Breakfast",
   "Complimentary Transfer",
+];
+
+const RATE_PLANS = {
+  romance: {
+    daily: { price: "THB 12,500", note: "Daily rate · breakfast included", suffix: "/ day" },
+    weekly: { price: "THB 87,500", note: "Weekly rate · breakfast included", suffix: "/ week" },
+  },
+  family: {
+    daily: { price: "THB 28,000", note: "Daily rate · breakfast included", suffix: "/ day" },
+    weekly: { price: "THB 196,000", note: "Weekly rate · breakfast included", suffix: "/ week" },
+  },
+  ocean: {
+    daily: { price: "THB 55,000", note: "Daily rate · breakfast and transfer included", suffix: "/ day" },
+    weekly: { price: "THB 385,000", note: "Weekly rate · breakfast and transfer included", suffix: "/ week" },
+  },
+};
+
+const PROMOTIONS = [
+  {
+    id: "early-bird",
+    eyebrow: "Early Bird Getaway",
+    title: "Save 15% when you reserve 30 days ahead",
+    description: "Book at least 30 days in advance and enjoy a 15% saving, plus round-trip Phuket airport transfer by Alphard van.",
+    perks: ["15% villa savings", "Round-trip airport transfer", "Advance planning privilege"],
+    cta: "Book Early Bird",
+  },
+  {
+    id: "honeymoon",
+    eyebrow: "Honeymoon Package",
+    title: "A romantic 3-day, 2-night villa escape",
+    description: "For the 1-Bedroom Romance Villa, receive rose-petal bed styling, one bottle of champagne, and one floating breakfast.",
+    perks: ["Rose-petal bed styling", "Champagne for two", "One floating breakfast"],
+    cta: "Book Honeymoon",
+  },
 ];
 
 const MENU_ITEMS = [
@@ -484,6 +526,49 @@ function BookingModal({ onClose }) {
   );
 }
 
+function PromotionModal({ onClose, onBook }) {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" style={{ width: "min(94vw,860px)", position: "relative", display: "flex", flexDirection: "column" }} onClick={e => e.stopPropagation()}>
+        <div style={{ background: "rgba(13,15,26,0.98)", border: "1px solid rgba(212,175,55,0.16)", borderRadius: "var(--r)", padding: "34px 36px 36px", position: "relative" }}>
+          <button onClick={onClose} style={{ position: "absolute", top: 14, right: 18, color: "rgba(255,255,255,0.3)", fontSize: 15, lineHeight: 1, background: "none", border: "none", cursor: "pointer" }}>×</button>
+
+          <div style={{ marginBottom: 26 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 10 }}>Pricing & Promotions</p>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.2rem,4vw,3.3rem)", fontWeight: 500, fontStyle: "italic", color: "white", lineHeight: 0.96, marginBottom: 10 }}>Special offers worth arriving for</h2>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", maxWidth: 560, lineHeight: 1.8 }}>
+              Curated offers for earlier planning and romantic stays, designed to add more value without losing the quiet luxury feel.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            {PROMOTIONS.map((promo, index) => (
+              <div key={promo.id} style={{ background: index === 0 ? "linear-gradient(180deg, rgba(212,175,55,0.09), rgba(255,255,255,0.03))" : "linear-gradient(180deg, rgba(220,208,255,0.10), rgba(255,255,255,0.03))", border: "1px solid rgba(255,255,255,0.08)", padding: "24px 22px 22px", display: "flex", flexDirection: "column", minHeight: 280 }}>
+                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 12 }}>{promo.eyebrow}</p>
+                <h3 style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 500, color: "white", lineHeight: 0.98, marginBottom: 14 }}>{promo.title}</h3>
+                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.8, marginBottom: 18 }}>{promo.description}</p>
+                <ul style={{ listStyle: "none", display: "grid", gap: 8, marginBottom: "auto" }}>
+                  {promo.perks.map((perk) => (
+                    <li key={perk} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,0.72)" }}>
+                      <span style={{ color: "var(--gold)", fontSize: 8 }}>◆</span>{perk}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => { onClose(); onBook(); }}
+                  style={{ marginTop: 20, height: 46, background: "var(--gold)", color: "#0d0f1a", fontWeight: 700, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", borderRadius: "var(--r)", border: "none", cursor: "pointer", fontFamily: "var(--font-body)" }}
+                >
+                  {promo.cta}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── NAV ────────────────────────────────────────────── */
 function Nav({ onBook, scrolled, onMenuOpen, onNavigate }) {
   const [navReady, setNavReady] = useState(false);
@@ -659,7 +744,9 @@ function FeaturesStrip() {
 /* ── VILLAS SECTION ─────────────────────────────────── */
 function VillasSection({ onBook }) {
   const [active, setActive] = useState(0);
+  const [rateMode, setRateMode] = useState("daily");
   const villa = VILLAS[active];
+  const ratePlan = RATE_PLANS[villa.id]?.[rateMode] || RATE_PLANS.romance.daily;
   const sectionRef = useRef(null);
   const backgroundRef = useRef(null);
   const contentRef = useRef(null);
@@ -732,6 +819,37 @@ function VillasSection({ onBook }) {
 
           {/* Content */}
           <div style={{ padding: "48px 44px", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 22 }}>
+              <div style={{ display: "flex", gap: 4 }}>
+                {[
+                  { id: "daily", label: "Daily" },
+                  { id: "weekly", label: "Weekly" },
+                ].map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => setRateMode(option.id)}
+                    style={{
+                      minWidth: option.id === "weekly" ? 100 : 88,
+                      padding: "10px 16px",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "0.12em",
+                      textTransform: "uppercase",
+                      fontFamily: "var(--font-body)",
+                      background: rateMode === option.id ? "var(--gold)" : "rgba(29,35,64,0.05)",
+                      color: rateMode === option.id ? "#0d0f1a" : "rgba(29,35,64,0.55)",
+                      border: "1px solid",
+                      borderColor: rateMode === option.id ? "var(--gold)" : "rgba(29,35,64,0.15)",
+                      borderRadius: "var(--r)",
+                      cursor: "pointer",
+                      transition: "all 200ms ease",
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(29,35,64,0.4)", marginBottom: 10 }}>{villa.type}</div>
             <h3 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 500, color: "var(--navy)", lineHeight: 1, marginBottom: 28, whiteSpace: "pre-line" }}>{villa.name}</h3>
 
@@ -755,18 +873,19 @@ function VillasSection({ onBook }) {
             </ul>
 
             {/* Price + CTA */}
-            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", paddingTop: 24, borderTop: "1px solid rgba(29,35,64,0.10)" }}>
-              <div>
-                <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 2 }}>From</div>
-                <div style={{ fontFamily: "var(--font-body)", color: "var(--gold)", lineHeight: 1, letterSpacing: "-0.02em" }}>
-                  <span style={{ fontSize: 16, fontWeight: 400, verticalAlign: "super" }}>{villa.price.replace(/[\d,]+/, '')}</span>
-                  <span style={{ fontSize: 36, fontWeight: 700 }}>{villa.price.replace(/[^\d,]/g, '')}</span>
+              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", paddingTop: 24, borderTop: "1px solid rgba(29,35,64,0.10)" }}>
+                <div>
+                  <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 2 }}>From</div>
+                  <div style={{ fontFamily: "var(--font-body)", color: "var(--gold)", lineHeight: 1, letterSpacing: "-0.02em" }}>
+                    <span style={{ fontSize: 16, fontWeight: 400, verticalAlign: "super" }}>{ratePlan.price.replace(/[\d,]+/, '')}</span>
+                    <span style={{ fontSize: 36, fontWeight: 700 }}>{ratePlan.price.replace(/[^\d,]/g, '')}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(29,35,64,0.45)", marginLeft: 8, letterSpacing: "0.08em", textTransform: "uppercase" }}>{ratePlan.suffix}</span>
+                  </div>
+                  <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", marginTop: 2 }}>{ratePlan.note}</div>
                 </div>
-                <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", marginTop: 2 }}>{villa.priceNote}</div>
-              </div>
-              <button onClick={onBook} style={{ padding: "13px 28px", background: "var(--gold)", color: "#0d0f1a", border: "none", borderRadius: "var(--r)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--font-body)" }}>
-                Reserve This Villa
-              </button>
+                <button onClick={onBook} style={{ padding: "13px 28px", background: "var(--gold)", color: "#0d0f1a", border: "none", borderRadius: "var(--r)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--font-body)" }}>
+                  Reserve This Villa
+                </button>
             </div>
           </div>
         </div>
@@ -956,7 +1075,7 @@ function BackToTopButton({ visible, onClick }) {
       style={{
         position: "fixed",
         right: 28,
-        bottom: 28,
+        bottom: 40,
         zIndex: 420,
         display: "flex",
         alignItems: "center",
@@ -992,9 +1111,70 @@ function BackToTopButton({ visible, onClick }) {
   );
 }
 
+function SpecialOfferButton({ visible, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label="Open special offers"
+      style={{
+        position: "fixed",
+        left: 44,
+        bottom: 28,
+        zIndex: 419,
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "14px 22px",
+        borderRadius: "0",
+        border: "1px solid var(--gold)",
+        background: "var(--gold)",
+        color: "#0d0f1a",
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(18px)",
+        pointerEvents: visible ? "auto" : "none",
+        boxShadow: "0 14px 30px rgba(212,175,55,0.18)",
+        transition: "opacity 420ms cubic-bezier(0.22,0.61,0.36,1), transform 520ms cubic-bezier(0.22,0.61,0.36,1), background 220ms ease, border-color 220ms ease, box-shadow 220ms ease",
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = "#e0bb47";
+        e.currentTarget.style.borderColor = "#e0bb47";
+        e.currentTarget.style.boxShadow = "0 18px 36px rgba(212,175,55,0.24)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = "var(--gold)";
+        e.currentTarget.style.borderColor = "var(--gold)";
+        e.currentTarget.style.boxShadow = "0 14px 30px rgba(212,175,55,0.18)";
+      }}
+    >
+      <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 40, height: 40 }}>
+        <img
+          src="../../assets/images/gift-box-offer.svg"
+          alt=""
+          aria-hidden="true"
+          style={{
+            width: 36,
+            height: 36,
+            display: "block",
+            objectFit: "contain",
+            transformOrigin: "50% 70%",
+            filter: "brightness(0) saturate(100%)",
+            animation: "giftShake 2.4s ease-in-out infinite",
+          }}
+        />
+      </span>
+      Special Offer
+    </button>
+  );
+}
+
 /* ── APP ────────────────────────────────────────────── */
 function App() {
   const [booking, setBooking] = useState(false);
+  const [promotionOpen, setPromotionOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -1022,10 +1202,10 @@ function App() {
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
-    if (booking || menuOpen) document.body.style.overflow = "hidden";
+    if (booking || promotionOpen || menuOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = previousOverflow; };
-  }, [booking, menuOpen]);
+  }, [booking, promotionOpen, menuOpen]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -1055,17 +1235,20 @@ function App() {
       <Hero onBook={() => setBooking(true)} />
       <FeaturesStrip />
       <VillasSection onBook={() => setBooking(true)} />
-      <ExperienceSection />
-      <FullBleedQuote />
-      <Footer onBook={() => setBooking(true)} />
-      <BackToTopButton visible={showBackToTop} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
-      {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} onNavigate={handleNavigate} onBook={() => setBooking(true)} />}
-      {booking && <BookingModal onClose={() => setBooking(false)} />}
-    </>
-  );
+        <ExperienceSection />
+        <FullBleedQuote />
+        <Footer onBook={() => setBooking(true)} />
+        <SpecialOfferButton visible={true} onClick={() => setPromotionOpen(true)} />
+        <BackToTopButton visible={showBackToTop} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
+        {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} onNavigate={handleNavigate} onBook={() => setBooking(true)} />}
+        {promotionOpen && <PromotionModal onClose={() => setPromotionOpen(false)} onBook={() => setBooking(true)} />}
+        {booking && <BookingModal onClose={() => setBooking(false)} />}
+      </>
+    );
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 </script>
 </body>
 </html>
+
