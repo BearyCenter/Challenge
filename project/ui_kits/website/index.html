@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Azure Phuket — Private Villa Resort</title>
+<link rel="icon" type="image/png" href="../../assets/logoap.png">
 <link rel="stylesheet" href="../../fonts/fonts.css">
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -19,7 +20,7 @@
     --navy: #1D2340; --midnight: #0d0f1a; --navy2: #111522;
     --ivory: #F8F6F1; --paper: #FFFDF9; --ink: #5F6478;
     --border: rgba(29,35,64,0.10); --border-light: rgba(255,255,255,0.12);
-    --r: 3px;
+    --r: 0;
     --font-display: "Cormorant Garamond", "Palatino Linotype", serif;
     --font-body: "Manrope", "Segoe UI", sans-serif;
   }
@@ -34,9 +35,6 @@
     transition: opacity 600ms ease, visibility 600ms ease;
   }
   #loader.out { opacity: 0; visibility: hidden; }
-  .loader-logo {
-    animation: loaderPulse 1.2s ease-in-out infinite alternate;
-  }
   @keyframes loaderPulse { from { opacity: 0.3; } to { opacity: 1; } }
 
   /* ── Scroll reveal ── */
@@ -70,6 +68,22 @@
     from { opacity: 0; transform: translateY(24px) scale(0.97); }
     to   { opacity: 1; transform: none; }
   }
+  input[type="date"] {
+    color-scheme: dark;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    display: none;
+    -webkit-appearance: none;
+  }
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    display: none;
+    -webkit-appearance: none;
+  }
+  select::-ms-expand {
+    display: none;
+  }
 
   /* ── Nav ── */
   .nav-link {
@@ -92,20 +106,12 @@
   /* ── Scrollbar ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: #0d0f1a; }
-  ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.35); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.35); border-radius: 0; }
 </style>
 </head>
 <body>
 
-<div id="loader">
-  <div class="loader-logo">
-    <svg width="48" height="48" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <text x="30" y="145" font-size="120" font-family="'Cormorant Garamond',serif" font-weight="500" fill="white">A</text>
-      <line x1="95" y1="38" x2="115" y2="162" stroke="#D4AF37" stroke-width="3"/>
-      <text x="100" y="145" font-size="120" font-family="'Cormorant Garamond',serif" font-weight="500" fill="white">P</text>
-    </svg>
-  </div>
-</div>
+<div id="loader"></div>
 
 <div id="root"></div>
 
@@ -121,7 +127,7 @@ const VILLAS = [
     view: "Tropical Garden",
     price: "฿12,500", priceNote: "per night · breakfast incl.",
     amenities: ["6m Private Pool","Freestanding Jacuzzi","Outdoor Rain Shower","Floating Breakfast"],
-    img: "../../assets/images/phuket1.png",
+    img: "../../assets/images/villa1.png",
     accent: "#DCD0FF",
   },
   {
@@ -131,7 +137,7 @@ const VILLAS = [
     view: "Private Lake & Garden",
     price: "฿28,000", priceNote: "per night · breakfast incl.",
     amenities: ["10m L-Shape Pool","BBQ Pavilion","Sunken Lounge","Pantry Kitchen"],
-    img: "../../assets/images/phuket4.png",
+    img: "../../assets/images/villa2.png",
     accent: "#AFEEEE",
   },
   {
@@ -141,7 +147,7 @@ const VILLAS = [
     view: "Panoramic Ocean & Sunset",
     price: "฿55,000", priceNote: "per night · breakfast + transfer incl.",
     amenities: ["15m Marble Lap Pool","Private Spa Room","Wine Cellar","24h Butler"],
-    img: "../../assets/images/phuket6.png",
+    img: "../../assets/images/villa3.png",
     accent: "#D4AF37",
   },
 ];
@@ -152,6 +158,14 @@ const FEATURES = [
   "In-Villa Private Chef",
   "Floating Breakfast",
   "Complimentary Transfer",
+];
+
+const MENU_ITEMS = [
+  { label: "Villas", target: "villas" },
+  { label: "Wellness", target: "wellness" },
+  { label: "Gallery", target: "gallery" },
+  { label: "Contact", target: "contact" },
+  { label: "About", target: "about" },
 ];
 
 /* ── HOOKS ──────────────────────────────────────────── */
@@ -178,12 +192,225 @@ function useParallax(ref, speed = 0.35) {
   }, [speed]);
 }
 
+function useSectionParallax(sectionRef, { backgroundRef, contentRef, accentRef, backgroundSpeed = 0.12, contentSpeed = 0.05, accentSpeed = 0.16 } = {}) {
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const update = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || 1;
+      const distanceFromCenter = rect.top + rect.height / 2 - viewportHeight / 2;
+
+      if (backgroundRef && backgroundRef.current) {
+        backgroundRef.current.style.transform = `translate3d(0, ${distanceFromCenter * -backgroundSpeed}px, 0)`;
+      }
+
+      if (contentRef && contentRef.current) {
+        contentRef.current.style.transform = `translate3d(0, ${distanceFromCenter * -contentSpeed}px, 0)`;
+      }
+
+      if (accentRef && accentRef.current) {
+        accentRef.current.style.transform = `translate3d(0, ${distanceFromCenter * -accentSpeed}px, 0)`;
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [sectionRef, backgroundRef, contentRef, accentRef, backgroundSpeed, contentSpeed, accentSpeed]);
+}
+
 /* ── BOOKING MODAL ──────────────────────────────────── */
+function MenuOverlay({ onClose, onNavigate, onBook }) {
+  const [activeItem, setActiveItem] = useState("Villas");
+  const [menuVisible, setMenuVisible] = useState(false);
+  const menuMeta = {
+    Villas: {
+      eyebrow: "Private Collection",
+      description: "Romance hideaways, family compounds, and signature oceanfront stays with quiet arrival rituals.",
+      image: "../../assets/images/villa3.png",
+    },
+    Wellness: {
+      eyebrow: "Dawn Rituals",
+      description: "Treatments, movement, and in-villa calm designed to feel restorative rather than performative.",
+      image: "../../assets/images/spa.png",
+    },
+    Gallery: {
+      eyebrow: "Resort Atmosphere",
+      description: "A visual passage through golden-hour villas, sea light, and the softer tempo of the island.",
+      image: "../../assets/images/phuket6.png",
+    },
+    Contact: {
+      eyebrow: "Concierge Desk",
+      description: "For reservations, arrival planning, and the details that make a private stay feel seamless.",
+      image: "../../assets/images/phuket5.png",
+    },
+    About: {
+      eyebrow: "The Azure Story",
+      description: "An intimate villa retreat shaped around privacy, warm service, and a slower luxury rhythm.",
+      image: "../../assets/images/phuket1.png",
+    },
+  };
+  const preview = menuMeta[activeItem] || menuMeta.Villas;
+
+  useEffect(() => {
+    const t = setTimeout(() => setMenuVisible(true), 30);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{ zIndex: 950, alignItems: "stretch", justifyContent: "stretch", backdropFilter: menuVisible ? "blur(20px) brightness(0.5)" : "blur(0px) brightness(1)", opacity: menuVisible ? 1 : 0, transition: "opacity 420ms cubic-bezier(0.22,0.61,0.36,1), backdrop-filter 520ms cubic-bezier(0.22,0.61,0.36,1)" }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: "100vw",
+          minHeight: "100vh",
+          padding: "36px 48px 48px",
+          background: "linear-gradient(160deg, rgba(8,10,18,0.98), rgba(17,21,34,0.96) 52%, rgba(29,35,64,0.93))",
+          boxShadow: "0 32px 84px rgba(9,11,22,0.38)",
+          position: "relative",
+          overflow: "hidden",
+          opacity: menuVisible ? 1 : 0,
+          transform: menuVisible ? "translateY(0)" : "translateY(16px)",
+          transition: "opacity 560ms cubic-bezier(0.22,0.61,0.36,1), transform 760ms cubic-bezier(0.22,0.61,0.36,1)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(circle at top right, rgba(212,175,55,0.16), transparent 28%), radial-gradient(circle at 18% 82%, rgba(175,238,238,0.10), transparent 24%)",
+            pointerEvents: "none",
+            opacity: menuVisible ? 1 : 0,
+            transition: "opacity 720ms cubic-bezier(0.22,0.61,0.36,1)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `linear-gradient(90deg, rgba(8,10,18,0.96) 0%, rgba(8,10,18,0.88) 34%, rgba(8,10,18,0.54) 60%, rgba(8,10,18,0.78) 100%), url('${preview.image}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            opacity: menuVisible ? 0.9 : 0,
+            transform: menuVisible ? "scale(1.02)" : "scale(1.05)",
+            transition: "background-image 450ms ease, opacity 700ms cubic-bezier(0.22,0.61,0.36,1), transform 900ms cubic-bezier(0.25,0.46,0.45,0.94)",
+            pointerEvents: "none",
+          }}
+        />
+        <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateRows: "auto 1fr auto", minHeight: "calc(100vh - 84px)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
+            <div>
+              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 8 }}>Private Access</div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem, 4vw, 4.6rem)", fontStyle: "italic", color: "white", lineHeight: 0.95 }}>Explore The Azure</div>
+            </div>
+            <button onClick={onClose} style={{ width: 42, height: 42, borderRadius: "0", border: "1px solid rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.78)", fontSize: 20 }}>
+              ×
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 640px) 1fr", gap: 48, alignItems: "end", flex: 1 }}>
+            <div style={{ display: "grid", gap: 14, alignSelf: "center" }}>
+              {MENU_ITEMS.map((item, index) => (
+                <button
+                  key={item.label}
+                  onClick={() => onNavigate(item.target)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    padding: "18px 0",
+                    borderBottom: `1px solid ${activeItem === item.label ? "rgba(212,175,55,0.34)" : "rgba(255,255,255,0.08)"}`,
+                    color: activeItem === item.label ? "var(--gold-light)" : "white",
+                    textAlign: "left",
+                    transition: "transform 250ms ease, color 250ms ease, border-color 250ms ease, opacity 250ms ease",
+                    transform: activeItem === item.label ? "translateX(10px)" : "translateX(0)",
+                    opacity: activeItem === item.label ? 1 : 0.84,
+                  }}
+                  onMouseEnter={() => setActiveItem(item.label)}
+                  onFocus={() => setActiveItem(item.label)}
+                >
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 4vw, 4.5rem)", fontStyle: "italic", lineHeight: 0.96 }}>{item.label}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: activeItem === item.label ? "rgba(255,255,255,0.58)" : "rgba(255,255,255,0.34)" }}>0{index + 1}</span>
+                </button>
+              ))}
+            </div>
+
+            <div style={{ alignSelf: "end", justifySelf: "end", width: "min(34vw, 440px)", paddingBottom: 28 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 14 }}>
+                {preview.eyebrow}
+              </div>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem, 2.6vw, 3rem)", fontStyle: "italic", color: "white", lineHeight: 1.02, marginBottom: 16 }}>
+                {activeItem}
+              </p>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.56)", lineHeight: 1.9 }}>
+                {preview.description}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 36, paddingTop: 22, borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18 }}>
+            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.8, maxWidth: 340 }}>
+              Full-screen navigation with live visual context, gentle motion, and a quieter luxury rhythm.
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <button onClick={onClose} style={{ padding: "12px 20px", border: "1px solid rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.78)", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  onClose();
+                  onBook();
+                }}
+                style={{ padding: "12px 24px", border: "1px solid var(--gold)", color: "var(--gold)", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}
+              >
+                Reserve Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function BookingModal({ onClose }) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
+
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
+  const toInputDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const [checkIn, setCheckIn] = useState(toInputDate(today));
+  const [checkOut, setCheckOut] = useState(toInputDate(tomorrow));
+
+  const openDatePicker = (event) => {
+    const input = event.currentTarget;
+    if (typeof input.showPicker === "function") {
+      input.showPicker();
+    }
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -191,11 +418,7 @@ function BookingModal({ onClose }) {
 
         {/* Top — brand identity, airy */}
         <div style={{ padding: "40px 36px 24px", textAlign: "center" }}>
-          <svg width="30" height="30" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: 10 }}>
-            <text x="30" y="145" fontSize="120" fontFamily="'Cormorant Garamond',serif" fontWeight="500" fill="white">A</text>
-            <line x1="95" y1="38" x2="115" y2="162" stroke="#D4AF37" strokeWidth="3"/>
-            <text x="100" y="145" fontSize="120" fontFamily="'Cormorant Garamond',serif" fontWeight="500" fill="white">P</text>
-          </svg>
+          <img src="../../assets/logoap.png" alt="The Azure Phuket mark" style={{ width: 54, height: 54, objectFit: "contain", display: "block", margin: "0 auto 14px" }} />
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 500, fontStyle: "italic", color: "white", lineHeight: 1, marginBottom: 6 }}>Reserve Your Stay</h2>
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em" }}>Bang Tao Beach · Phuket</p>
         </div>
@@ -205,10 +428,34 @@ function BookingModal({ onClose }) {
           <button onClick={onClose} style={{ position: "absolute", top: 14, right: 18, color: "rgba(255,255,255,0.3)", fontSize: 15, lineHeight: 1, background: "none", border: "none", cursor: "pointer" }}>✕</button>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-            {[{ label: "Check In", type: "date" }, { label: "Check Out", type: "date" }].map(({ label, type }) => (
+            {[{ label: "Check In", value: checkIn, onChange: setCheckIn }, { label: "Check Out", value: checkOut, onChange: setCheckOut }].map(({ label, value, onChange }) => (
               <div key={label}>
                 <label style={{ display: "block", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 5 }}>{label}</label>
-                <input type={type} style={{ width: "100%", height: 42, borderRadius: "var(--r)", border: "1px solid rgba(255,255,255,0.12)", padding: "0 11px", fontFamily: "var(--font-body)", fontSize: 13, color: "white", background: "rgba(255,255,255,0.04)", outline: "none" }} />
+                <input
+                  type="date"
+                  value={value}
+                  onChange={e => onChange(e.currentTarget.value)}
+                  onClick={openDatePicker}
+                  onFocus={openDatePicker}
+                  style={{
+                    width: "100%",
+                    height: 42,
+                    borderRadius: "var(--r)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    padding: "0 38px 0 11px",
+                    fontFamily: "var(--font-body)",
+                    fontSize: 13,
+                    color: "white",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E\")",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 12px center",
+                    backgroundSize: "14px 14px",
+                    outline: "none",
+                    appearance: "none",
+                    WebkitAppearance: "none",
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -220,7 +467,7 @@ function BookingModal({ onClose }) {
             ].map(({ label, opts }) => (
               <div key={label}>
                 <label style={{ display: "block", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 5 }}>{label}</label>
-                <select style={{ width: "100%", height: 42, borderRadius: "var(--r)", border: "1px solid rgba(255,255,255,0.12)", padding: "0 11px", fontFamily: "var(--font-body)", fontSize: 13, color: "white", background: "#1a1d2b", outline: "none" }}>
+                <select style={{ width: "100%", height: 42, borderRadius: "var(--r)", border: "1px solid rgba(255,255,255,0.12)", padding: "0 38px 0 11px", fontFamily: "var(--font-body)", fontSize: 13, color: "white", backgroundColor: "#1a1d2b", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5 6 8l4-3.5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", backgroundSize: "12px 12px", outline: "none", appearance: "none", WebkitAppearance: "none" }}>
                   {opts.map(o => <option key={o}>{o}</option>)}
                 </select>
               </div>
@@ -238,31 +485,44 @@ function BookingModal({ onClose }) {
 }
 
 /* ── NAV ────────────────────────────────────────────── */
-function Nav({ onBook, scrolled }) {
+function Nav({ onBook, scrolled, onMenuOpen, onNavigate }) {
+  const [navReady, setNavReady] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setNavReady(true), 820);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 300, height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 48px", transition: "background 300ms ease", background: scrolled ? "rgba(13,15,26,0.92)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
+    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 300, height: 88, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 48px", transition: "background 300ms ease", background: scrolled ? "rgba(13,15,26,0.92)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none" }}>
       {/* Left nav */}
-      <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-        <button style={{ display: "flex", flexDirection: "column", gap: 4.5, padding: 0, background: "none", border: "none", cursor: "pointer" }}>
+      <div style={{ display: "flex", gap: 32, alignItems: "center", opacity: navReady ? 1 : 0, transform: navReady ? "translateY(0)" : "translateY(16px)", transition: "opacity 1100ms 420ms cubic-bezier(0.22,0.61,0.36,1), transform 1300ms cubic-bezier(0.22,0.61,0.36,1)" }}>
+        <button onClick={onMenuOpen} aria-label="Open menu" style={{ display: "flex", flexDirection: "column", gap: 4.5, padding: 0, background: "none", border: "none", cursor: "pointer" }}>
           {[0,1,2].map(i => <span key={i} style={{ display: "block", width: i === 1 ? 16 : 20, height: 1, background: "rgba(255,255,255,0.7)" }} />)}
         </button>
-        <button className="nav-link">Villas</button>
-        <button className="nav-link">Wellness</button>
-        <button className="nav-link">Experiences</button>
+        <button className="nav-link" onClick={() => onNavigate("villas")}>Villas</button>
+        <button className="nav-link" onClick={() => onNavigate("wellness")}>Wellness</button>
+        <button className="nav-link" onClick={() => onNavigate("gallery")}>Experiences</button>
       </div>
 
       {/* Center logo */}
-      <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", textAlign: "center" }}>
-        <svg width="28" height="28" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <text x="30" y="145" fontSize="120" fontFamily="'Cormorant Garamond',serif" fontWeight="500" fill="white">A</text>
-          <line x1="95" y1="38" x2="115" y2="162" stroke="#D4AF37" strokeWidth="3"/>
-          <text x="100" y="145" fontSize="120" fontFamily="'Cormorant Garamond',serif" fontWeight="500" fill="white">P</text>
-        </svg>
-        <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginTop: 2 }}>THE AZURE · PHUKET</div>
+      <div style={{ position: "absolute", left: "50%", top: "50%", transform: navReady ? "translate(-50%, -50%)" : "translate(-50%, calc(-50% + 18px))", opacity: navReady ? 1 : 0, textAlign: "center", paddingTop: scrolled ? 0 : 20, transition: "opacity 1200ms 520ms cubic-bezier(0.22,0.61,0.36,1), transform 1400ms cubic-bezier(0.22,0.61,0.36,1), padding-top 400ms cubic-bezier(0.25,0.46,0.45,0.94)" }}>
+        <img
+          src={scrolled ? "../../assets/logoap.png" : "../../assets/fullnamelogo.png"}
+          alt="The Azure Phuket"
+          style={{ display: "block", margin: "0 auto", width: scrolled ? 42 : 360, height: scrolled ? 42 : 104, objectFit: "contain", transition: "all 400ms cubic-bezier(0.25,0.46,0.45,0.94)", filter: "brightness(1.02)" }}
+        />
+        {!scrolled ? (
+          <div style={{ display: "none", marginTop: 6, transition: "opacity 300ms ease" }}>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 500, fontStyle: "italic", color: "white", letterSpacing: "0.06em", lineHeight: 1 }}>The Azure</div>
+            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.36em", textTransform: "uppercase", color: "var(--gold)", marginTop: 4 }}>PHUKET</div>
+          </div>
+        ) : (
+          <div style={{ fontSize: 8, fontWeight: 600, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginTop: 2, transition: "opacity 300ms ease" }}>THE AZURE · PHUKET</div>
+        )}
       </div>
 
       {/* Right — BOOK NOW only */}
-      <button onClick={onBook} style={{ padding: "11px 22px", border: "1px solid var(--gold)", borderRadius: "var(--r)", background: "transparent", color: "var(--gold)", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", fontFamily: "var(--font-body)", transition: "background 200ms ease, color 200ms ease" }}
+      <button onClick={onBook} style={{ padding: "11px 22px", border: "1px solid var(--gold)", borderRadius: "var(--r)", background: "transparent", color: "var(--gold)", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", fontFamily: "var(--font-body)", transition: "background 200ms ease, color 200ms ease, opacity 1100ms 520ms cubic-bezier(0.22,0.61,0.36,1), transform 1300ms cubic-bezier(0.22,0.61,0.36,1)", opacity: navReady ? 1 : 0, transform: navReady ? "translateY(0)" : "translateY(16px)" }}
         onMouseEnter={e => { e.currentTarget.style.background = "var(--gold)"; e.currentTarget.style.color = "#0d0f1a"; }}
         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--gold)"; }}>
         Book Now
@@ -273,50 +533,92 @@ function Nav({ onBook, scrolled }) {
 
 /* ── HERO ───────────────────────────────────────────── */
 function Hero({ onBook }) {
-  const bgRef = useRef(null);
-  useParallax(bgRef, 0.3);
   const [loaded, setLoaded] = useState(false);
+  const [heroReady, setHeroReady] = useState(false);
+  const heroVisible = loaded && heroReady;
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 200);
     return () => clearTimeout(t);
   }, []);
+  useEffect(() => {
+    const fallback = setTimeout(() => setHeroReady(true), 1800);
+    return () => clearTimeout(fallback);
+  }, []);
 
   return (
-    <section style={{ position: "relative", height: "100vh", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
-      {/* Parallax background */}
-      <div ref={bgRef} className="parallax-bg" style={{ position: "absolute", inset: "-15% 0", backgroundImage: "url('../../assets/images/phuket1.png')", backgroundSize: "cover", backgroundPosition: "center 30%" }} />
+    <section id="about" style={{ position: "relative", height: "100vh", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
+      {/* Video background */}
+      <div style={{ position: "absolute", inset: "-10% 0", overflow: "hidden", pointerEvents: "none", transform: heroReady ? "scale(1)" : "scale(1.04)", transition: "transform 1400ms cubic-bezier(0.25,0.46,0.45,0.94)" }}>
+        <iframe
+          src="https://player.vimeo.com/video/1185218868?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&background=1"
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          title="The Azure Phuket"
+          onLoad={() => setTimeout(() => setHeroReady(true), 220)}
+          style={{ position: "absolute", top: "50%", left: "50%", width: "177.78vh", minWidth: "100%", height: "56.25vw", minHeight: "100%", transform: "translate(-50%, -50%)", border: 0 }}
+        />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: "none",
+          opacity: heroReady ? 0 : 1,
+          transition: "opacity 1400ms cubic-bezier(0.22,0.61,0.36,1)",
+          background: "linear-gradient(180deg, rgba(13,15,26,0.18), rgba(13,15,26,0.68)), radial-gradient(circle at 50% 42%, rgba(212,175,55,0.12), transparent 20%), url('../../assets/images/phuket1.png') center 30% / cover no-repeat",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          pointerEvents: "none",
+          opacity: heroReady ? 0 : 1,
+          transition: "opacity 1200ms cubic-bezier(0.22,0.61,0.36,1)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 34, height: 34, borderRadius: "0", border: "1px solid rgba(255,255,255,0.16)", borderTopColor: "var(--gold)", animation: "loaderPulse 1.2s ease-in-out infinite alternate" }} />
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)" }}>Loading The Azure</div>
+        </div>
+      </div>
 
       {/* Overlays */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,15,26,0.92) 0%, rgba(13,15,26,0.4) 45%, rgba(13,15,26,0.12) 100%)" }} />
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at bottom center, rgba(29,35,64,0.5), transparent 70%)" }} />
+      <div style={{ position: "absolute", inset: 0, zIndex: 3, background: "linear-gradient(to top, rgba(13,15,26,0.92) 0%, rgba(13,15,26,0.4) 45%, rgba(13,15,26,0.12) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, zIndex: 3, background: "radial-gradient(ellipse at bottom center, rgba(29,35,64,0.5), transparent 70%)" }} />
 
       {/* Left vertical labels */}
-      <div style={{ position: "absolute", left: 48, top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: 8, opacity: loaded ? 1 : 0, transition: "opacity 900ms 600ms ease" }}>
+      <div style={{ position: "absolute", zIndex: 4, left: 48, top: "50%", transform: heroVisible ? "translateY(-50%)" : "translateY(calc(-50% + 22px))", display: "flex", flexDirection: "column", gap: 8, opacity: heroVisible ? 1 : 0, transition: "opacity 1200ms 460ms cubic-bezier(0.22,0.61,0.36,1), transform 1400ms cubic-bezier(0.22,0.61,0.36,1)" }}>
         {["Private", "Luxury", "Phuket"].map((l, i) => (
           <div key={l} style={{ writingMode: "vertical-rl", textOrientation: "mixed", fontSize: 10, fontWeight: 600, letterSpacing: "0.22em", textTransform: "uppercase", color: i === 0 ? "white" : "rgba(255,255,255,0.35)", padding: "10px 4px", background: i === 0 ? "rgba(255,255,255,0.07)" : "transparent", border: i === 0 ? "1px solid rgba(255,255,255,0.14)" : "none", borderRadius: "var(--r)" }}>{l}</div>
         ))}
       </div>
 
       {/* Bottom content */}
-      <div style={{ position: "relative", zIndex: 2, width: "100%", padding: "0 48px 64px", textAlign: "center" }}>
+      <div style={{ position: "relative", zIndex: 4, width: "100%", padding: "0 48px 64px", textAlign: "center", opacity: heroVisible ? 1 : 0, transform: heroVisible ? "translateY(0)" : "translateY(34px)", transition: "opacity 1250ms 360ms cubic-bezier(0.22,0.61,0.36,1), transform 1450ms cubic-bezier(0.22,0.61,0.36,1)" }}>
         {/* Eyebrow */}
-        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 20, opacity: loaded ? 1 : 0, transform: loaded ? "none" : "translateY(16px)", transition: "opacity 700ms 300ms ease, transform 700ms 300ms ease" }}>
+        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 20, opacity: heroVisible ? 1 : 0, transform: heroVisible ? "none" : "translateY(14px)", transition: "opacity 1050ms 520ms cubic-bezier(0.22,0.61,0.36,1), transform 1200ms cubic-bezier(0.22,0.61,0.36,1)" }}>
           Bang Tao Beach · Phuket, Thailand
         </p>
 
         {/* Big tracked headline */}
-        <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(2.6rem,4.5vw,5rem)", letterSpacing: "0.22em", textTransform: "uppercase", color: "white", lineHeight: 1, marginBottom: 20, opacity: loaded ? 1 : 0, transform: loaded ? "none" : "translateY(24px)", transition: "opacity 800ms 450ms ease, transform 800ms 450ms ease" }}>
+        <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(2.6rem,4.5vw,5rem)", letterSpacing: "0.22em", textTransform: "uppercase", color: "white", lineHeight: 1, marginBottom: 20, opacity: heroVisible ? 1 : 0, transform: heroVisible ? "none" : "translateY(22px)", transition: "opacity 1180ms 620ms cubic-bezier(0.22,0.61,0.36,1), transform 1320ms cubic-bezier(0.22,0.61,0.36,1)" }}>
           Private
           <span style={{ fontStyle: "italic", color: "var(--gold-light)", letterSpacing: "0.16em" }}> Escape</span>
         </h1>
 
         {/* Sub line */}
-        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", letterSpacing: "0.08em", maxWidth: "50ch", margin: "0 auto 36px", lineHeight: 1.7, opacity: loaded ? 1 : 0, transform: loaded ? "none" : "translateY(16px)", transition: "opacity 700ms 600ms ease, transform 700ms 600ms ease" }}>
+        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", letterSpacing: "0.08em", maxWidth: "50ch", margin: "0 auto 36px", lineHeight: 1.7, opacity: heroVisible ? 1 : 0, transform: heroVisible ? "none" : "translateY(18px)", transition: "opacity 1120ms 760ms cubic-bezier(0.22,0.61,0.36,1), transform 1260ms cubic-bezier(0.22,0.61,0.36,1)" }}>
           Luxury pool villas with 24-hour butler service — where every detail is considered
         </p>
 
         {/* Scroll indicator */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: loaded ? 0.5 : 0, transition: "opacity 800ms 900ms ease" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: heroVisible ? 0.5 : 0, transform: heroVisible ? "translateY(0)" : "translateY(16px)", transition: "opacity 1100ms 980ms cubic-bezier(0.22,0.61,0.36,1), transform 1240ms cubic-bezier(0.22,0.61,0.36,1)" }}>
           <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom, transparent, var(--gold))" }} />
           <span style={{ fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)" }}>Scroll</span>
         </div>
@@ -329,21 +631,24 @@ function Hero({ onBook }) {
 }
 
 /* ── FEATURES STRIP ─────────────────────────────────── */
-function FeaturesStrip({ onBook }) {
+function FeaturesStrip() {
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { contentRef, contentSpeed: 0.035 });
+
   return (
-    <div style={{ background: "#13151f", borderBottom: "1px solid rgba(255,255,255,0.05)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", padding: "0 48px" }}>
-        {/* Inline text CTA — same visual weight as features */}
-        <button onClick={onBook} style={{ background: "transparent", color: "rgba(212,175,55,0.75)", padding: "0 20px 0 0", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", border: "none", borderRight: "1px solid rgba(255,255,255,0.07)", cursor: "pointer", flexShrink: 0, fontFamily: "var(--font-body)", marginRight: 20, lineHeight: 1.7, whiteSpace: "nowrap" }}>
-          Get Special<br/>Privileges →
-        </button>
+    <div ref={sectionRef} style={{ background: "var(--paper)", borderBottom: "1px solid rgba(29,35,64,0.08)", borderTop: "1px solid rgba(29,35,64,0.08)", overflow: "hidden" }}>
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", padding: "0 48px", willChange: "transform" }}>
+        <div style={{ background: "transparent", color: "var(--gold)", padding: "0 24px 0 0", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", borderRight: "1px solid rgba(29,35,64,0.12)", flexShrink: 0, fontFamily: "var(--font-body)", marginRight: 24, lineHeight: 1.8, whiteSpace: "nowrap", userSelect: "none" }}>
+          Get Special<br/>Privileges
+        </div>
         {FEATURES.map((f, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, padding: "14px 18px", borderRight: i < FEATURES.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-              <circle cx="8" cy="8" r="7" stroke="rgba(212,175,55,0.4)" strokeWidth="1"/>
-              <path d="M4.5 8l2.5 2.5 4.5-5" stroke="var(--gold)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "18px 22px", borderRight: i < FEATURES.length - 1 ? "1px solid rgba(29,35,64,0.08)" : "none" }}>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="8" cy="8" r="7" stroke="rgba(212,175,55,0.6)" strokeWidth="1"/>
+              <path d="M4.5 8l2.5 2.5 4.5-5" stroke="var(--gold)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.38)", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>{f}</span>
+            <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(29,35,64,0.75)", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{f}</span>
           </div>
         ))}
       </div>
@@ -355,19 +660,39 @@ function FeaturesStrip({ onBook }) {
 function VillasSection({ onBook }) {
   const [active, setActive] = useState(0);
   const villa = VILLAS[active];
+  const sectionRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { backgroundRef, contentRef, backgroundSpeed: 0.11, contentSpeed: 0.045 });
 
   return (
-    <section style={{ background: "#0d0f1a", padding: "120px 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px" }}>
+    <section ref={sectionRef} id="villas" style={{ background: "var(--ivory)", padding: "64px 0 120px", position: "relative", overflow: "hidden" }}>
+      <div
+        ref={backgroundRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "0 0 0 0",
+          opacity: 0.16,
+          pointerEvents: "none",
+          backgroundImage: "linear-gradient(180deg, rgba(248,246,241,0.64), rgba(248,246,241,0.82)), url('../../assets/images/lite-texture.jpg')",
+          backgroundRepeat: "no-repeat, no-repeat",
+          backgroundSize: "cover, cover",
+          backgroundPosition: "center top, center top",
+          mixBlendMode: "multiply",
+          willChange: "transform",
+        }}
+      />
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 1, willChange: "transform" }}>
         {/* Header */}
         <div className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 64 }}>
           <div>
             <span className="section-eye">Our Collection</span>
-            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(3rem,5vw,5rem)", fontWeight: 500, color: "white", lineHeight: 0.95, letterSpacing: "0.04em" }}>
-              Private Villa<br/><span style={{ fontStyle: "italic", color: "var(--gold-light)" }}>Selection</span>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(3rem,5vw,5rem)", fontWeight: 500, color: "var(--navy)", lineHeight: 0.95, letterSpacing: "0.04em" }}>
+              Private Villa<br/><span style={{ fontStyle: "italic", color: "var(--navy)" }}>Selection</span>
             </h2>
           </div>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", maxWidth: "28ch", lineHeight: 1.75, textAlign: "right" }}>
+          <p style={{ fontSize: 13, color: "rgba(29,35,64,0.5)", maxWidth: "28ch", lineHeight: 1.75, textAlign: "right" }}>
             Every villa features a private pool, dedicated butler, and complete seclusion
           </p>
         </div>
@@ -375,34 +700,47 @@ function VillasSection({ onBook }) {
         {/* Villa selector tabs */}
         <div className="reveal reveal-delay-1" style={{ display: "flex", gap: 0, marginBottom: 2, width: "fit-content" }}>
           {VILLAS.map((v, i) => (
-            <button key={v.id} onClick={() => setActive(i)} style={{ padding: "12px 28px", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: "var(--font-body)", background: i === active ? "var(--gold)" : "rgba(255,255,255,0.04)", color: i === active ? "#0d0f1a" : "rgba(255,255,255,0.5)", border: "1px solid", borderColor: i === active ? "var(--gold)" : "rgba(255,255,255,0.1)", borderRadius: "var(--r)", cursor: "pointer", transition: "all 200ms ease", marginRight: 4 }}>
-              {v.type}
+            <button key={v.id} onClick={() => setActive(i)} style={{ padding: "12px 28px", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: "var(--font-body)", background: i === active ? "var(--gold)" : "rgba(29,35,64,0.05)", color: i === active ? "#0d0f1a" : "rgba(29,35,64,0.55)", border: "1px solid", borderColor: i === active ? "var(--gold)" : "rgba(29,35,64,0.15)", borderRadius: "var(--r)", cursor: "pointer", transition: "all 200ms ease", marginRight: 4 }}>
+              {v.tag}
             </button>
           ))}
         </div>
 
         {/* Villa detail panel */}
-        <div className="reveal reveal-delay-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "var(--r)", overflow: "hidden" }}>
+        <div className="reveal reveal-delay-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: "white", border: "1px solid rgba(29,35,64,0.10)", borderRadius: "var(--r)", overflow: "hidden" }}>
           {/* Image */}
-          <div style={{ height: 480, overflow: "hidden", position: "relative" }}>
-            <img src={villa.img} alt={villa.name} style={{ width: "100%", height: "120%", objectFit: "cover", display: "block", transition: "opacity 400ms ease" }} key={villa.id} />
-            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, transparent 60%, rgba(13,15,26,0.6))" }} />
+          <div style={{ overflow: "hidden", position: "relative", minHeight: 480 }}>
+            <img src={villa.img} alt={villa.name} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "opacity 400ms ease" }} key={villa.id} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, transparent 60%, rgba(255,252,249,0.5))" }} />
             <div style={{ position: "absolute", top: 20, left: 20 }}>
-              <span style={{ display: "inline-block", padding: "4px 12px", background: villa.accent + "22", border: `1px solid ${villa.accent}55`, borderRadius: "var(--r)", fontSize: 10, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: villa.accent }}>{villa.tag}</span>
+              <span
+                style={{
+                  display: "inline-block",
+                  fontFamily: "var(--font-display)",
+                  fontSize: 30,
+                  fontWeight: 500,
+                  fontStyle: "italic",
+                  letterSpacing: "0.03em",
+                  color: "white",
+                  textShadow: "0 10px 30px rgba(13,15,26,0.28)",
+                }}
+              >
+                {villa.tag}
+              </span>
             </div>
           </div>
 
           {/* Content */}
           <div style={{ padding: "48px 44px", display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{villa.type}</div>
-            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 500, color: "white", lineHeight: 1, marginBottom: 28, whiteSpace: "pre-line" }}>{villa.name}</h3>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(29,35,64,0.4)", marginBottom: 10 }}>{villa.type}</div>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 500, color: "var(--navy)", lineHeight: 1, marginBottom: 28, whiteSpace: "pre-line" }}>{villa.name}</h3>
 
             {/* Specs grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 20px", paddingBottom: 28, borderBottom: "1px solid rgba(255,255,255,0.08)", marginBottom: 28 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 20px", paddingBottom: 28, borderBottom: "1px solid rgba(29,35,64,0.10)", marginBottom: 28 }}>
               {[["Area", villa.size], ["Capacity", villa.capacity], ["Bed Type", villa.bed], ["View", villa.view]].map(([k, v]) => (
                 <div key={k}>
-                  <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 3 }}>{k}</div>
-                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 500 }}>{v}</div>
+                  <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(29,35,64,0.4)", marginBottom: 3 }}>{k}</div>
+                  <div style={{ fontSize: 13, color: "var(--navy)", fontWeight: 500 }}>{v}</div>
                 </div>
               ))}
             </div>
@@ -410,18 +748,21 @@ function VillasSection({ onBook }) {
             {/* Amenities */}
             <ul style={{ listStyle: "none", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 16px", marginBottom: "auto", paddingBottom: 32 }}>
               {villa.amenities.map(a => (
-                <li key={a} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
+                <li key={a} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(29,35,64,0.65)" }}>
                   <span style={{ color: "var(--gold)", fontSize: 7 }}>◆</span>{a}
                 </li>
               ))}
             </ul>
 
             {/* Price + CTA */}
-            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", paddingTop: 24, borderTop: "1px solid rgba(29,35,64,0.10)" }}>
               <div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 2 }}>From</div>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: 38, fontWeight: 500, color: "var(--gold)", lineHeight: 1 }}>{villa.price}</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>{villa.priceNote}</div>
+                <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 2 }}>From</div>
+                <div style={{ fontFamily: "var(--font-body)", color: "var(--gold)", lineHeight: 1, letterSpacing: "-0.02em" }}>
+                  <span style={{ fontSize: 16, fontWeight: 400, verticalAlign: "super" }}>{villa.price.replace(/[\d,]+/, '')}</span>
+                  <span style={{ fontSize: 36, fontWeight: 700 }}>{villa.price.replace(/[^\d,]/g, '')}</span>
+                </div>
+                <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", marginTop: 2 }}>{villa.priceNote}</div>
               </div>
               <button onClick={onBook} style={{ padding: "13px 28px", background: "var(--gold)", color: "#0d0f1a", border: "none", borderRadius: "var(--r)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--font-body)" }}>
                 Reserve This Villa
@@ -436,14 +777,50 @@ function VillasSection({ onBook }) {
 
 /* ── EXPERIENCE SECTION ─────────────────────────────── */
 function ExperienceSection() {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const sectionRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { backgroundRef, contentRef, backgroundSpeed: 0.13, contentSpeed: 0.05 });
   const items = [
     { label: "In-Villa Dining", sub: "Private Chef · BBQ · Floating Breakfast", img: "../../assets/images/phuket3.png" },
-    { label: "Spa & Wellness", sub: "In-Villa massage, yoga at dawn", img: "../../assets/images/phuket2.png" },
+    { label: "Spa & Wellness", sub: "In-Villa massage, yoga at dawn", img: "../../assets/images/spa.png" },
     { label: "Concierge", sub: "Island tours · Transfers · Surprises", img: "../../assets/images/phuket5.png" },
   ];
   return (
-    <section style={{ background: "var(--ivory)", padding: "120px 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px" }}>
+    <section
+      ref={sectionRef}
+      id="wellness"
+      style={{
+        background: "var(--ivory)",
+        padding: "120px 0",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        ref={backgroundRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "0 0 auto 0",
+          height: 360,
+          opacity: 0.28,
+          pointerEvents: "none",
+          background: [
+            "linear-gradient(180deg, rgba(248,246,241,0.14), rgba(248,246,241,0.78))",
+            "url('../../assets/images/palm-texture.jpg')",
+          ].join(", "),
+          backgroundPosition: "center top, center 18%",
+          backgroundRepeat: "no-repeat, no-repeat",
+          backgroundSize: "cover, cover",
+          mixBlendMode: "multiply",
+          maskImage: "linear-gradient(180deg, rgba(0,0,0,0.88), rgba(0,0,0,0.42), transparent)",
+          WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,0.88), rgba(0,0,0,0.42), transparent)",
+          willChange: "transform",
+        }}
+      />
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 1, willChange: "transform" }}>
         <div className="reveal" style={{ marginBottom: 56 }}>
           <span className="section-eye" style={{ color: "var(--ink)" }}>Experiences</span>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.8rem,5vw,4.8rem)", fontWeight: 500, color: "var(--navy)", lineHeight: 0.95 }}>
@@ -452,12 +829,46 @@ function ExperienceSection() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 2 }}>
           {items.map((item, i) => (
-            <div key={i} className={`reveal reveal-delay-${i}`} style={{ position: "relative", overflow: "hidden", height: 460, cursor: "pointer" }}>
-              <img src={item.img} alt={item.label} style={{ width: "100%", height: "120%", objectFit: "cover", display: "block", transition: "transform 600ms ease" }}
-                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.04)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "none"} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(17,21,34,0.85) 0%, transparent 55%)" }} />
-              <div style={{ position: "absolute", bottom: 28, left: 28 }}>
+            <div
+              key={i}
+              className={`reveal reveal-delay-${i}`}
+              style={{ position: "relative", overflow: "hidden", height: 460, cursor: "pointer", background: "#0d0f1a" }}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <img
+                src={item.img}
+                alt={item.label}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                  transform: hoveredIndex === i ? "scale(1)" : "scale(1.16)",
+                  transformOrigin: "center center",
+                  transition: "transform 950ms cubic-bezier(0.25,0.46,0.45,0.94), filter 950ms cubic-bezier(0.25,0.46,0.45,0.94)",
+                  filter: hoveredIndex === i ? "saturate(1.03)" : "saturate(0.92)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: hoveredIndex === i
+                    ? "linear-gradient(to top, rgba(17,21,34,0.78) 0%, rgba(17,21,34,0.14) 55%, rgba(17,21,34,0.04) 100%)"
+                    : "linear-gradient(to top, rgba(17,21,34,0.88) 0%, transparent 55%)",
+                  transition: "background 700ms cubic-bezier(0.25,0.46,0.45,0.94)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: hoveredIndex === i ? 38 : 28,
+                  left: 28,
+                  transform: hoveredIndex === i ? "translateY(0)" : "translateY(8px)",
+                  transition: "bottom 700ms cubic-bezier(0.25,0.46,0.45,0.94), transform 700ms cubic-bezier(0.25,0.46,0.45,0.94)",
+                }}
+              >
                 <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 6 }}>0{i+1}</p>
                 <h3 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 500, color: "white", marginBottom: 4 }}>{item.label}</h3>
                 <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)" }}>{item.sub}</p>
@@ -472,13 +883,16 @@ function ExperienceSection() {
 
 /* ── FULL-BLEED IMAGE ────────────────────────────────── */
 function FullBleedQuote() {
-  const ref = useRef(null);
-  useParallax(ref, 0.2);
+  const sectionRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { backgroundRef, contentRef, backgroundSpeed: 0.16, contentSpeed: 0.05 });
+
   return (
-    <section style={{ position: "relative", height: 480, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div ref={ref} style={{ position: "absolute", inset: "-15% 0", backgroundImage: "url('../../assets/images/phuket4.png')", backgroundSize: "cover", backgroundPosition: "center" }} />
-      <div style={{ position: "absolute", inset: 0, background: "rgba(13,15,26,0.65)" }} />
-      <div className="reveal" style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 48px" }}>
+    <section ref={sectionRef} id="gallery" style={{ position: "relative", height: 520, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      <div ref={backgroundRef} style={{ position: "absolute", inset: "-10% 0", backgroundImage: "url('../../assets/images/phuket6.png')", backgroundSize: "cover", backgroundPosition: "center 40%", willChange: "transform" }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(13,15,26,0.42)" }} />
+      <div ref={contentRef} className="reveal" style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 48px", willChange: "transform" }}>
         <blockquote style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2rem,4vw,3.6rem)", fontWeight: 400, fontStyle: "italic", color: "white", lineHeight: 1.2, maxWidth: "24ch", margin: "0 auto 16px" }}>
           "Your Private Escape, Redefined."
         </blockquote>
@@ -490,18 +904,16 @@ function FullBleedQuote() {
 
 /* ── FOOTER ─────────────────────────────────────────── */
 function Footer({ onBook }) {
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { contentRef, contentSpeed: 0.04 });
+
   return (
-    <footer style={{ background: "#080a12", padding: "72px 0 40px", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px" }}>
+    <footer ref={sectionRef} id="contact" style={{ background: "#080a12", padding: "72px 0 40px", borderTop: "1px solid rgba(255,255,255,0.05)", overflow: "hidden" }}>
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px", willChange: "transform" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: 48, marginBottom: 56 }}>
           <div>
-            <svg width="36" height="36" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: 12 }}>
-              <text x="30" y="145" fontSize="120" fontFamily="'Cormorant Garamond',serif" fontWeight="500" fill="white">A</text>
-              <line x1="95" y1="38" x2="115" y2="162" stroke="#D4AF37" strokeWidth="3"/>
-              <text x="100" y="145" fontSize="120" fontFamily="'Cormorant Garamond',serif" fontWeight="500" fill="white">P</text>
-            </svg>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 500, color: "white", lineHeight: 1, letterSpacing: "0.04em", marginBottom: 2 }}>The Azure</div>
-            <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: "0.24em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 16 }}>PHUKET</div>
+            <img src="../../assets/fullnamelogo.png" alt="The Azure Phuket" style={{ width: 168, height: 52, objectFit: "contain", display: "block", marginBottom: 16 }} />
             <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", lineHeight: 1.85 }}>Pool Villa Resort<br/>Bang Tao Beach, Phuket<br/>Thailand 83110</p>
             <p style={{ fontSize: 13, color: "var(--gold)", fontWeight: 600, marginTop: 12 }}>076-999-888</p>
             <button onClick={onBook} style={{ marginTop: 20, padding: "11px 22px", border: "1px solid var(--gold)", background: "transparent", color: "var(--gold)", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", borderRadius: "var(--r)", cursor: "pointer", fontFamily: "var(--font-body)" }}>Book Now</button>
@@ -523,6 +935,12 @@ function Footer({ onBook }) {
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 24, display: "flex", justifyContent: "space-between" }}>
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.2)" }}>© 2026 The Azure Phuket. All rights reserved.</p>
+          <a href="./design-system.html" style={{ fontSize: 11, color: "rgba(255,255,255,0.2)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, transition: "color 150ms" }}
+            onMouseEnter={e => e.currentTarget.style.color = "var(--gold)"}
+            onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.2)"}>
+            <span style={{ width: 5, height: 5, background: "var(--gold)", display: "inline-block" }}></span>
+            Design System
+          </a>
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.2)" }}>Privacy · Terms · Cookies</p>
         </div>
       </div>
@@ -530,10 +948,56 @@ function Footer({ onBook }) {
   );
 }
 
+function BackToTopButton({ visible, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label="Back to top"
+      style={{
+        position: "fixed",
+        right: 28,
+        bottom: 28,
+        zIndex: 420,
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "12px 16px",
+        borderRadius: "0",
+        border: "1px solid rgba(212,175,55,0.24)",
+        background: "rgba(8,10,18,0.78)",
+        backdropFilter: "blur(14px)",
+        color: "white",
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(18px)",
+        pointerEvents: visible ? "auto" : "none",
+        boxShadow: "0 18px 40px rgba(9,11,22,0.22)",
+        transition: "opacity 420ms cubic-bezier(0.22,0.61,0.36,1), transform 520ms cubic-bezier(0.22,0.61,0.36,1), background 200ms ease, border-color 200ms ease",
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = "rgba(17,21,34,0.92)";
+        e.currentTarget.style.borderColor = "rgba(212,175,55,0.42)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = "rgba(8,10,18,0.78)";
+        e.currentTarget.style.borderColor = "rgba(212,175,55,0.24)";
+      }}
+    >
+      <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "0", border: "none", color: "var(--gold)" }}>↑</span>
+      Top
+    </button>
+  );
+}
+
 /* ── APP ────────────────────────────────────────────── */
 function App() {
   const [booking, setBooking] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useScrollReveal();
 
@@ -547,20 +1011,55 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 60);
+    const h = () => {
+      setScrolled(window.scrollY > 60);
+      setShowBackToTop(window.scrollY > Math.max(window.innerHeight * 0.85, 520));
+    };
     window.addEventListener("scroll", h, { passive: true });
+    h();
     return () => window.removeEventListener("scroll", h);
+  }, []);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    if (booking || menuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [booking, menuOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const handleNavigate = useCallback((target) => {
+    setMenuOpen(false);
+    const element = document.getElementById(target);
+    if (element) {
+      const top = element.getBoundingClientRect().top + window.scrollY - 88;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
   }, []);
 
   return (
     <>
-      <Nav onBook={() => setBooking(true)} scrolled={scrolled} />
+      <Nav
+        onBook={() => setBooking(true)}
+        scrolled={scrolled}
+        onMenuOpen={() => setMenuOpen(true)}
+        onNavigate={handleNavigate}
+      />
       <Hero onBook={() => setBooking(true)} />
-      <FeaturesStrip onBook={() => setBooking(true)} />
+      <FeaturesStrip />
       <VillasSection onBook={() => setBooking(true)} />
       <ExperienceSection />
       <FullBleedQuote />
       <Footer onBook={() => setBooking(true)} />
+      <BackToTopButton visible={showBackToTop} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
+      {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} onNavigate={handleNavigate} onBook={() => setBooking(true)} />}
       {booking && <BookingModal onClose={() => setBooking(false)} />}
     </>
   );

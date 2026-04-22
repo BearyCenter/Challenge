@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System — The Azure Phuket</title>
+<link rel="icon" type="image/png" href="../../assets/logoap.png">
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #D4AF37;
+    --navy: #1D2340; --midnight: #0d0f1a;
+    --ivory: #F8F6F1; --paper: #FFFDF9;
+    --border: rgba(29,35,64,0.08);
+    --font-display: "Cormorant Garamond", "Palatino Linotype", serif;
+    --font-body: "Manrope", "Segoe UI", sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--ivory); color: var(--navy); }
+
+  /* ── Top nav ── */
+  .topnav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    height: 60px; background: var(--midnight);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+  }
+  .topnav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .topnav-logo .name { font-family: var(--font-display); font-size: 16px; font-weight: 500; color: white; letter-spacing: 0.04em; }
+  .topnav-logo .sub  { font-size: 8px; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 1px; }
+  .topnav-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); display: flex; align-items: center; gap: 6px;
+  }
+  .topnav-badge i { width: 5px; height: 5px; background: var(--gold); display: inline-block; }
+  .topnav-anchors { display: flex; gap: 0; }
+  .topnav-anchors a {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); text-decoration: none; padding: 0 14px;
+    border-right: 1px solid rgba(255,255,255,0.06); line-height: 60px;
+    transition: color 150ms;
+  }
+  .topnav-anchors a:hover { color: rgba(255,255,255,0.85); }
+  .topnav-back {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.35); text-decoration: none; transition: color 150ms;
+  }
+  .topnav-back:hover { color: white; }
+
+  /* ── Page ── */
+  .page { padding-top: 60px; }
+
+  /* ── Hero banner ── */
+  .ds-hero {
+    background: var(--midnight); padding: 72px 80px 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .ds-hero-eye {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .ds-hero h1 {
+    font-family: var(--font-display); font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 500; color: white; line-height: 0.95; letter-spacing: 0.04em; margin-bottom: 20px;
+  }
+  .ds-hero h1 em { font-style: italic; color: rgba(255,255,255,0.45); }
+  .ds-hero p {
+    font-size: 13px; color: rgba(255,255,255,0.35); max-width: 52ch; line-height: 1.8;
+  }
+  .ds-hero-meta {
+    display: flex; gap: 40px; margin-top: 40px; padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .ds-hero-meta-item { }
+  .ds-hero-meta-item .label { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 4px; }
+  .ds-hero-meta-item .value { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; }
+
+  /* ── Section ── */
+  .ds-section { padding: 0; }
+  .ds-section-header {
+    padding: 48px 80px 32px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+    position: sticky; top: 60px; z-index: 10;
+  }
+  .ds-section-header .section-num {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 6px;
+  }
+  .ds-section-header h2 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 500; color: var(--navy); line-height: 1;
+  }
+  .ds-section-header p {
+    font-size: 11px; color: rgba(29,35,64,0.4); max-width: 32ch; text-align: right; line-height: 1.7;
+  }
+
+  /* ── Subsection ── */
+  .ds-sub { border-bottom: 1px solid var(--border); }
+  .ds-sub-label {
+    padding: 18px 80px 16px;
+    background: var(--ivory);
+    font-size: 9px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(29,35,64,0.3); display: flex; align-items: center; gap: 12px;
+  }
+  .ds-sub-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .ds-sub iframe {
+    width: 100%; border: none; display: block;
+    min-height: 400px;
+  }
+
+  /* ── Section divider ── */
+  .ds-divider {
+    height: 4px; background: linear-gradient(to right, var(--gold), transparent 60%);
+  }
+</style>
+</head>
+<body>
+
+<!-- Top nav -->
+<nav class="topnav">
+  <a href="./index.html" class="topnav-logo">
+    <svg width="28" height="28" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <text x="30" y="145" font-size="120" font-family="'Cormorant Garamond',serif" font-weight="500" fill="white">A</text>
+      <line x1="95" y1="38" x2="115" y2="162" stroke="#D4AF37" stroke-width="3"/>
+      <text x="100" y="145" font-size="120" font-family="'Cormorant Garamond',serif" font-weight="500" fill="white">P</text>
+    </svg>
+    <div>
+      <div class="name">The Azure</div>
+      <div class="sub">Phuket</div>
+    </div>
+  </a>
+
+  <div class="topnav-anchors">
+    <a href="#brand">Brand</a>
+    <a href="#color">Color</a>
+    <a href="#typography">Typography</a>
+    <a href="#components">Components</a>
+    <a href="#spacing">Spacing</a>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:24px;">
+    <div class="topnav-badge"><i></i> Design System</div>
+    <a href="./index.html" class="topnav-back">← Website</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="ds-hero">
+    <div class="ds-hero-eye">The Azure Phuket</div>
+    <h1>Design<br/><em>System</em></h1>
+    <p>A complete reference of brand identity, visual language, and UI components for The Azure Phuket — Private Villa Resort.</p>
+    <div class="ds-hero-meta">
+      <div class="ds-hero-meta-item"><div class="label">Version</div><div class="value">1.0.0</div></div>
+      <div class="ds-hero-meta-item"><div class="label">Sections</div><div class="value">5 Categories</div></div>
+      <div class="ds-hero-meta-item"><div class="label">Components</div><div class="value">16 Pages</div></div>
+      <div class="ds-hero-meta-item"><div class="label">Brand</div><div class="value">Azure · Phuket</div></div>
+    </div>
+  </div>
+
+  <!-- 1. Brand -->
+  <div class="ds-divider"></div>
+  <section id="brand" class="ds-section">
+    <div class="ds-section-header">
+      <div><div class="section-num">01</div><h2>Brand</h2></div>
+      <p>Logo, monogram, and brand imagery guidelines</p>
+    </div>
+    <div class="ds-sub">
+      <div class="ds-sub-label">Logo &amp; Mark</div>
+      <iframe src="../../preview/brand-logo.html" class="auto-h"></iframe>
+    </div>
+    <div class="ds-sub">
+      <div class="ds-sub-label">Imagery</div>
+      <iframe src="../../preview/brand-imagery.html" class="auto-h"></iframe>
+    </div>
+  </section>
+
+  <!-- 2. Color -->
+  <div class="ds-divider"></div>
+  <section id="color" class="ds-section">
+    <div class="ds-section-header">
+      <div><div class="section-num">02</div><h2>Color</h2></div>
+      <p>Brand palette and supporting color system</p>
+    </div>
+    <div class="ds-sub">
+      <div class="ds-sub-label">Brand Colors</div>
+      <iframe src="../../preview/colors-brand.html" class="auto-h"></iframe>
+    </div>
+    <div class="ds-sub">
+      <div class="ds-sub-label">Supporting Colors</div>
+      <iframe src="../../preview/colors-supporting.html" class="auto-h"></iframe>
+    </div>
+  </section>
+
+  <!-- 3. Typography -->
+  <div class="ds-divider"></div>
+  <section id="typography" class="ds-section">
+    <div class="ds-section-header">
+      <div><div class="section-num">03</div><h2>Typography</h2></div>
+      <p>Display and body type scales</p>
+    </div>
+    <div class="ds-sub">
+      <div class="ds-sub-label">Display</div>
+      <iframe src="../../preview/type-display.html" class="auto-h"></iframe>
+    </div>
+    <div class="ds-sub">
+      <div class="ds-sub-label">Body</div>
+      <iframe src="../../preview/type-body.html" class="auto-h"></iframe>
+    </div>
+  </section>
+
+  <!-- 4. Components -->
+  <div class="ds-divider"></div>
+  <section id="components" class="ds-section">
+    <div class="ds-section-header">
+      <div><div class="section-num">04</div><h2>Components</h2></div>
+      <p>UI building blocks and interactive patterns</p>
+    </div>
+    <div class="ds-sub"><div class="ds-sub-label">Buttons</div><iframe src="../../preview/components-buttons.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Badges</div><iframe src="../../preview/components-badges.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Cards</div><iframe src="../../preview/components-cards.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Forms</div><iframe src="../../preview/components-forms.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Hero</div><iframe src="../../preview/components-hero.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Navigation</div><iframe src="../../preview/components-navigation.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Panels Dark</div><iframe src="../../preview/components-panels-dark.html" class="auto-h"></iframe></div>
+  </section>
+
+  <!-- 5. Spacing & Tokens -->
+  <div class="ds-divider"></div>
+  <section id="spacing" class="ds-section">
+    <div class="ds-section-header">
+      <div><div class="section-num">05</div><h2>Spacing &amp; Tokens</h2></div>
+      <p>Design tokens, spacing scale, radii and shadows</p>
+    </div>
+    <div class="ds-sub"><div class="ds-sub-label">Tokens</div><iframe src="../../preview/spacing-tokens.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Radii</div><iframe src="../../preview/spacing-radii.html" class="auto-h"></iframe></div>
+    <div class="ds-sub"><div class="ds-sub-label">Shadows</div><iframe src="../../preview/spacing-shadows.html" class="auto-h"></iframe></div>
+  </section>
+
+  <footer style="background:var(--midnight);padding:32px 80px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);">
+    <p style="font-size:11px;color:rgba(255,255,255,0.2);">© 2026 The Azure Phuket Design System</p>
+    <a href="./index.html" style="font-size:11px;color:rgba(255,255,255,0.3);text-decoration:none;">← Back to Website</a>
+  </footer>
+</div>
+
+<script>
+  // Auto-height iframes
+  function resizeFrame(frame) {
+    try {
+      const h = frame.contentDocument.documentElement.scrollHeight;
+      if (h > 100) frame.style.height = h + 'px';
+    } catch(e) {}
+  }
+
+  document.querySelectorAll('iframe.auto-h').forEach(frame => {
+    frame.addEventListener('load', () => resizeFrame(frame));
+    // fallback heights while loading
+    frame.style.height = '500px';
+  });
+</script>
+</body>
+</html>
