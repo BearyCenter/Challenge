@@ -5,7 +5,15 @@
       "destination": "/ui_kits/website/index.html"
     },
     {
+      "source": "/index.html",
+      "destination": "/ui_kits/website/index.html"
+    },
+    {
       "source": "/design-system",
+      "destination": "/ui_kits/website/design-system.html"
+    },
+    {
+      "source": "/design-system.html",
       "destination": "/ui_kits/website/design-system.html"
     }
   ]
