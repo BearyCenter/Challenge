@@ -36,6 +36,18 @@
   }
   #loader.out { opacity: 0; visibility: hidden; }
   @keyframes loaderPulse { from { opacity: 0.3; } to { opacity: 1; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* Hero: one-time gold shimmer across the headline word */
+  @keyframes goldSweepOnce { 0% { background-position: 180% center; } 100% { background-position: -40% center; } }
+  /* Hero: slow ambient light sweep (single lightweight overlay) */
+  @keyframes heroSheen { 0% { transform: translateX(-140%) skewX(-12deg); } 100% { transform: translateX(240%) skewX(-12deg); } }
+  @media (prefers-reduced-motion: reduce) { .hero-sheen { display: none !important; } }
+  /* Special-offer button: gold glow flow (shown on hover) */
+  @keyframes offerGlow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .offer-glow { animation: none !important; } }
   @keyframes giftShake {
     0%, 70%, 100% { transform: rotate(0deg) translateX(0); }
     74% { transform: rotate(-8deg) translateX(-1px); }
@@ -111,6 +123,31 @@
     display: block; margin-bottom: 12px;
   }
 
+  /* ── Dialog field focus ring (visible replacement for outline:none) ── */
+  [role="dialog"] input:focus,
+  [role="dialog"] select:focus,
+  [role="dialog"] textarea:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.28);
+  }
+
+  /* ── Lining numerals for serif headings (digit readability) ── */
+  h1, h2, h3, h4, blockquote { font-feature-settings: "lnum" 1; font-variant-numeric: lining-nums; }
+
+  /* ── Gallery hover ── */
+  .gallery-grid button:hover .gallery-img { transform: scale(1.07); }
+  .gallery-grid button:hover .gallery-veil { opacity: 1; }
+
+  /* ── Responsive (testimonials / story / gallery) ── */
+  @media (max-width: 860px) {
+    .tm-grid { grid-template-columns: 1fr !important; }
+    .story-row { grid-template-columns: 1fr !important; gap: 24px !important; }
+    .story-row .story-media { order: 1 !important; height: 280px !important; }
+    .story-row .story-text { order: 2 !important; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: 150px !important; }
+    .gallery-grid button { grid-area: auto !important; }
+  }
+
   /* ── Scrollbar ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: #0d0f1a; }
@@ -122,6 +159,32 @@
 <div id="loader"></div>
 
 <div id="root"></div>
+
+<script>
+  // Failsafe: if React/Babel never render (CDN blocked, offline, or a script
+  // error), the full-screen #loader would otherwise trap a blank dark screen.
+  // After 8s with an empty #root, surface a readable message instead.
+  window.setTimeout(function () {
+    var root = document.getElementById("root");
+    var loader = document.getElementById("loader");
+    if (root && root.childElementCount === 0 && loader) {
+      loader.classList.remove("out");
+      loader.style.flexDirection = "column";
+      loader.style.color = "#F8F6F1";
+      loader.style.fontFamily = "system-ui, sans-serif";
+      loader.style.textAlign = "center";
+      loader.style.padding = "24px";
+      loader.innerHTML =
+        '<div style="max-width:420px;line-height:1.6">' +
+        '<strong>The page could not finish loading.</strong><br>' +
+        'It relies on React &amp; Babel from unpkg.com. ' +
+        'Check your internet connection (or whether a proxy/ad-blocker is ' +
+        'blocking unpkg.com), then reload. ' +
+        'Open the browser console (F12) for the exact error.' +
+        '</div>';
+    }
+  }, 8000);
+</script>
 
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback } = React;
@@ -200,6 +263,68 @@ const PROMOTIONS = [
     perks: ["Rose-petal bed styling", "Champagne for two", "One floating breakfast"],
     cta: "Book Honeymoon",
   },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: "The most private, considered stay we have ever had. The butler anticipated everything — our villa felt like a home we never wanted to leave.",
+    name: "Isabella & Marcus",
+    role: "Ocean Signature · 6 nights",
+    location: "London, UK",
+  },
+  {
+    quote: "Floating breakfast at sunrise, the pool to ourselves, total silence. The Azure understands that true luxury is space and discretion.",
+    name: "Anong Srisai",
+    role: "Romance Villa · Honeymoon",
+    location: "Bangkok, TH",
+  },
+  {
+    quote: "We travelled with three generations and every detail was handled with grace. Already planning our return for next high season.",
+    name: "The Tan Family",
+    role: "Family Oasis · 8 nights",
+    location: "Singapore",
+  },
+];
+
+const TRUST_STATS = [
+  { value: "4.9", suffix: "/ 5", label: "Average guest rating" },
+  { value: "1,200", suffix: "+", label: "Private stays hosted" },
+  { value: "98", suffix: "%", label: "Guests who would return" },
+];
+
+// Booking pricing — service charge 10% + VAT 7% (compounded ≈ 17.7%)
+const TAX_RATE = 0.177;
+
+const STORY_CHAPTERS = [
+  {
+    n: "01",
+    title: "A sense of place",
+    img: "../../assets/images/phuket2.png",
+    body: "Set along the quiet northern curve of Bang Tao Beach, The Azure follows the island's own rhythm — slow mornings, golden afternoons, and the sound of the Andaman just beyond the palms.",
+  },
+  {
+    n: "02",
+    title: "Designed for privacy",
+    img: "../../assets/images/villa2.png",
+    body: "Each villa is a world of its own: walled gardens, a private pool, and interiors of warm stone and natural light. No shared corridors, no crowds — only space that belongs entirely to you.",
+  },
+  {
+    n: "03",
+    title: "Service, quietly perfected",
+    img: "../../assets/images/spa.png",
+    body: "A dedicated butler anticipates rather than asks. From a floating breakfast at sunrise to a chef-prepared dinner under the stars, every detail is arranged before the thought is spoken.",
+  },
+];
+
+const GALLERY = [
+  { img: "../../assets/images/villa1.png", caption: "Romance Villa · Private Pool" },
+  { img: "../../assets/images/phuket3.png", caption: "Sunset over the Andaman" },
+  { img: "../../assets/images/villa3.png", caption: "Ocean Signature · Living Pavilion" },
+  { img: "../../assets/images/spa.png", caption: "In-Villa Spa & Wellness" },
+  { img: "../../assets/images/phuket4.png", caption: "Golden-hour terraces" },
+  { img: "../../assets/images/villa2.png", caption: "Family Oasis · Garden Pool" },
+  { img: "../../assets/images/phuket5.png", caption: "Island light" },
+  { img: "../../assets/images/phuket2.png", caption: "Bang Tao shoreline" },
 ];
 
 const MENU_ITEMS = [
@@ -427,11 +552,8 @@ function MenuOverlay({ onClose, onNavigate, onBook }) {
   );
 }
 
-function BookingModal({ onClose }) {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
+function BookingModal({ onClose, initialVillaId }) {
+  const STEPS = ["Stay", "Details", "Confirm"];
 
   const today = new Date();
   const tomorrow = new Date();
@@ -444,82 +566,341 @@ function BookingModal({ onClose }) {
     return `${year}-${month}-${day}`;
   };
 
+  const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [bookingRef, setBookingRef] = useState("");
+
   const [checkIn, setCheckIn] = useState(toInputDate(today));
   const [checkOut, setCheckOut] = useState(toInputDate(tomorrow));
+  const [guests, setGuests] = useState("2 Guests");
+  const [villaId, setVillaId] = useState(
+    VILLAS.some(v => v.id === initialVillaId) ? initialVillaId : VILLAS[0].id
+  );
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [requests, setRequests] = useState("");
+  const [errors, setErrors] = useState({});
+  const [confirmClose, setConfirmClose] = useState(false);
+
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  // Move focus into the dialog when the step changes
+  useEffect(() => {
+    if (done) return;
+    const el = dialogRef.current && dialogRef.current.querySelector("input, select, button");
+    if (el) el.focus({ preventScroll: true });
+  }, [step, done]);
+
+  const villa = VILLAS.find(v => v.id === villaId) || VILLAS[0];
+  const nightly = parseInt((RATE_PLANS[villaId] && RATE_PLANS[villaId].daily.price || "0").replace(/[^\d]/g, ""), 10) || 0;
+  const msPerNight = 86400000;
+  const nights = Math.max(0, Math.round((new Date(checkOut) - new Date(checkIn)) / msPerNight));
+  const subtotal = nightly * nights;
+  const taxes = Math.round(subtotal * TAX_RATE);
+  const total = subtotal + taxes;
+  const fmt = (n) => "THB " + n.toLocaleString("en-US");
+  const prettyDate = (iso) => {
+    const d = new Date(iso);
+    if (isNaN(d)) return "—";
+    return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  };
 
   const openDatePicker = (event) => {
     const input = event.currentTarget;
-    if (typeof input.showPicker === "function") {
-      input.showPicker();
-    }
+    if (typeof input.showPicker === "function") input.showPicker();
   };
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" style={{ width: "min(94vw,480px)", position: "relative", display: "flex", flexDirection: "column" }} onClick={e => e.stopPropagation()}>
+  // The booking is "dirty" once the guest moves past step 1 or enters any detail.
+  const dirty = step > 1 || [firstName, lastName, email, phone, requests].some(v => v.trim().length > 0);
 
-        {/* Top — brand identity, airy */}
-        <div style={{ padding: "40px 36px 24px", textAlign: "center" }}>
-          <img src="../../assets/logoap.png" alt="The Azure Phuket mark" style={{ width: 54, height: 54, objectFit: "contain", display: "block", margin: "0 auto 14px" }} />
-          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 500, fontStyle: "italic", color: "white", lineHeight: 1, marginBottom: 6 }}>Reserve Your Stay</h2>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em" }}>Bang Tao Beach · Phuket</p>
+  // Guard against accidental dismissal (backdrop click / Escape) when data exists.
+  const attemptDismiss = () => {
+    if (submitting) return;
+    if (done) { onClose(); return; }
+    if (dirty) setConfirmClose(true);
+    else onClose();
+  };
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key !== "Escape") return;
+      if (confirmClose) setConfirmClose(false);
+      else attemptDismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [dirty, submitting, confirmClose, done]);
+
+  const validateStay = () => {
+    const e = {};
+    if (nights < 1) e.dates = "Your check-out date must be at least one night after check-in.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const validateDetails = () => {
+    const e = {};
+    if (!firstName.trim()) e.firstName = "Please enter your first name.";
+    if (!lastName.trim()) e.lastName = "Please enter your last name.";
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim())) e.email = "Please enter a valid email address.";
+    if (phone.trim().replace(/[^\d]/g, "").length < 7) e.phone = "Please enter a contact phone number.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const goNext = () => {
+    if (step === 1 && !validateStay()) return;
+    if (step === 2 && !validateDetails()) return;
+    setErrors({});
+    setStep(s => Math.min(STEPS.length, s + 1));
+  };
+  const goBack = () => { setErrors({}); setStep(s => Math.max(1, s - 1)); };
+
+  const submit = () => {
+    setSubmitting(true);
+    setTimeout(() => {
+      setBookingRef("AZ-" + Math.random().toString(36).slice(2, 8).toUpperCase());
+      setSubmitting(false);
+      setDone(true);
+    }, 1500);
+  };
+
+  /* ── shared styles ── */
+  const labelStyle = { display: "block", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.42)", marginBottom: 6 };
+  const fieldStyle = (invalid) => ({
+    width: "100%", height: 44, borderRadius: "var(--r)",
+    border: `1px solid ${invalid ? "#E0795B" : "rgba(255,255,255,0.14)"}`,
+    padding: "0 13px", fontFamily: "var(--font-body)", fontSize: 13, color: "white",
+    backgroundColor: "rgba(255,255,255,0.04)", outline: "none",
+    transition: "border-color 180ms ease",
+  });
+  const selectStyle = (invalid) => ({
+    ...fieldStyle(invalid), padding: "0 38px 0 13px", backgroundColor: "#1a1d2b",
+    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5 6 8l4-3.5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
+    backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", backgroundSize: "12px 12px",
+    appearance: "none", WebkitAppearance: "none",
+  });
+  const dateStyle = (invalid) => ({
+    ...fieldStyle(invalid), padding: "0 38px 0 13px", colorScheme: "dark",
+    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E\")",
+    backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", backgroundSize: "14px 14px",
+    appearance: "none", WebkitAppearance: "none",
+  });
+  const errorText = (msg) => msg ? (
+    <p role="alert" style={{ fontSize: 11, color: "#E8927C", marginTop: 6, lineHeight: 1.5 }}>{msg}</p>
+  ) : null;
+  const summaryRow = (k, v, opts = {}) => (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16, padding: opts.divider ? "14px 0 0" : "0", borderTop: opts.divider ? "1px solid rgba(255,255,255,0.10)" : "none", marginTop: opts.divider ? 14 : 0 }}>
+      <span style={{ fontSize: opts.strong ? 12 : 12, color: opts.strong ? "white" : "rgba(255,255,255,0.5)", fontWeight: opts.strong ? 700 : 400, letterSpacing: opts.strong ? "0.14em" : "0", textTransform: opts.strong ? "uppercase" : "none" }}>{k}</span>
+      <span style={{ fontSize: opts.strong ? 22 : 13, color: opts.strong ? "var(--gold)" : "rgba(255,255,255,0.86)", fontWeight: opts.strong ? 700 : 500, textAlign: "right", fontFamily: "var(--font-body)", fontVariantNumeric: "lining-nums tabular-nums", letterSpacing: opts.strong ? "-0.01em" : "0" }}>{v}</span>
+    </div>
+  );
+
+  /* ── SUCCESS STATE ── */
+  if (done) {
+    return (
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-box" role="dialog" aria-modal="true" aria-label="Reservation confirmed" style={{ width: "min(94vw,460px)", position: "relative", background: "rgba(13,15,26,0.98)", border: "1px solid rgba(212,175,55,0.22)", borderRadius: "var(--r)", padding: "44px 36px 36px", textAlign: "center" }} onClick={e => e.stopPropagation()}>
+          <div style={{ width: 64, height: 64, margin: "0 auto 22px", borderRadius: "50%", border: "1px solid var(--gold)", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(212,175,55,0.08)" }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.24em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 10 }}>Reservation Received</p>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 500, fontStyle: "italic", color: "white", lineHeight: 1.02, marginBottom: 12 }}>Thank you, {firstName || "Guest"}</h2>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.8, marginBottom: 24, maxWidth: 340, margin: "0 auto 24px" }}>
+            A confirmation has been sent to <span style={{ color: "rgba(255,255,255,0.85)" }}>{email}</span>. Our concierge will personally contact you within 24 hours to finalise your arrival.
+          </p>
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.10)", padding: "20px 22px", textAlign: "left", display: "grid", gap: 12, marginBottom: 26 }}>
+            {summaryRow("Confirmation", bookingRef)}
+            {summaryRow("Villa", villa.tag)}
+            {summaryRow("Arrival", prettyDate(checkIn))}
+            {summaryRow("Departure", prettyDate(checkOut))}
+            {summaryRow("Estimated total", fmt(total), { strong: true, divider: true })}
+          </div>
+          <button onClick={onClose} style={{ width: "100%", height: 48, background: "var(--gold)", color: "#0d0f1a", fontWeight: 700, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", borderRadius: "var(--r)", border: "none", cursor: "pointer", fontFamily: "var(--font-body)" }}>
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── MULTI-STEP FLOW ── */
+  return (
+    <div className="modal-overlay" onClick={attemptDismiss}>
+      <div ref={dialogRef} className="modal-box" role="dialog" aria-modal="true" aria-label="Reserve your stay" style={{ width: "min(94vw,500px)", maxHeight: "92vh", overflowY: "auto", position: "relative", display: "flex", flexDirection: "column", background: "rgba(13,15,26,0.98)", border: "1px solid rgba(212,175,55,0.16)", borderRadius: "var(--r)" }} onClick={e => e.stopPropagation()}>
+
+        {/* Confirm-discard guard */}
+        {confirmClose && (
+          <div role="alertdialog" aria-modal="true" aria-label="Discard booking" onClick={e => e.stopPropagation()} style={{ position: "absolute", inset: 0, zIndex: 6, background: "rgba(10,12,20,0.94)", backdropFilter: "blur(6px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "40px 32px" }}>
+            <div style={{ width: 52, height: 52, marginBottom: 18, borderRadius: "50%", border: "1px solid rgba(212,175,55,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            </div>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 28, fontWeight: 500, fontStyle: "italic", color: "white", lineHeight: 1.05, marginBottom: 10 }}>Discard your booking?</h3>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, maxWidth: 300, marginBottom: 28 }}>The details you have entered for this reservation will not be saved.</p>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button onClick={() => setConfirmClose(false)} autoFocus style={{ height: 46, padding: "0 26px", background: "var(--gold)", color: "#0d0f1a", fontWeight: 700, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", border: "none", borderRadius: "var(--r)", cursor: "pointer", fontFamily: "var(--font-body)" }}>Keep Editing</button>
+              <button onClick={onClose} style={{ height: 46, padding: "0 26px", background: "transparent", color: "rgba(255,255,255,0.65)", fontWeight: 700, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--r)", cursor: "pointer", fontFamily: "var(--font-body)" }}>Discard</button>
+            </div>
+          </div>
+        )}
+
+        {/* Header + progress */}
+        <div style={{ padding: "30px 36px 22px", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          <button onClick={attemptDismiss} aria-label="Close" style={{ position: "absolute", top: 16, right: 18, color: "rgba(255,255,255,0.34)", fontSize: 16, lineHeight: 1, background: "none", border: "none", cursor: "pointer" }}>✕</button>
+          <div style={{ textAlign: "center", marginBottom: 22 }}>
+            <img src="../../assets/logoap.png" alt="The Azure Phuket mark" style={{ width: 44, height: 44, objectFit: "contain", display: "block", margin: "0 auto 10px" }} />
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 500, fontStyle: "italic", color: "white", lineHeight: 1, marginBottom: 4 }}>Reserve Your Stay</h2>
+            <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.12em", textTransform: "uppercase" }}>Step {step} of {STEPS.length} · {STEPS[step - 1]}</p>
+          </div>
+          {/* Progress steps */}
+          <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
+            {STEPS.map((label, i) => {
+              const idx = i + 1;
+              const active = idx === step;
+              const complete = idx < step;
+              return (
+                <React.Fragment key={label}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                    <div style={{ width: 24, height: 24, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, border: `1px solid ${active || complete ? "var(--gold)" : "rgba(255,255,255,0.2)"}`, background: complete ? "var(--gold)" : active ? "rgba(212,175,55,0.12)" : "transparent", color: complete ? "#0d0f1a" : active ? "var(--gold)" : "rgba(255,255,255,0.4)", transition: "all 250ms ease" }}>
+                      {complete ? "✓" : idx}
+                    </div>
+                    <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: active ? "var(--gold)" : "rgba(255,255,255,0.34)" }}>{label}</span>
+                  </div>
+                  {idx < STEPS.length && <div style={{ flex: 1, height: 1, background: complete ? "var(--gold)" : "rgba(255,255,255,0.14)", margin: "0 8px", marginBottom: 18, transition: "background 250ms ease" }} />}
+                </React.Fragment>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Bottom — action panel */}
-        <div style={{ background: "rgba(13,15,26,0.98)", border: "1px solid rgba(212,175,55,0.16)", borderRadius: "var(--r)", padding: "28px 36px 32px", position: "relative" }}>
-          <button onClick={onClose} style={{ position: "absolute", top: 14, right: 18, color: "rgba(255,255,255,0.3)", fontSize: 15, lineHeight: 1, background: "none", border: "none", cursor: "pointer" }}>✕</button>
+        {/* Body */}
+        <div style={{ padding: "26px 36px 18px" }}>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-            {[{ label: "Check In", value: checkIn, onChange: setCheckIn }, { label: "Check Out", value: checkOut, onChange: setCheckOut }].map(({ label, value, onChange }) => (
-              <div key={label}>
-                <label style={{ display: "block", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 5 }}>{label}</label>
-                <input
-                  type="date"
-                  value={value}
-                  onChange={e => onChange(e.currentTarget.value)}
-                  onClick={openDatePicker}
-                  onFocus={openDatePicker}
-                  style={{
-                    width: "100%",
-                    height: 42,
-                    borderRadius: "var(--r)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    padding: "0 38px 0 11px",
-                    fontFamily: "var(--font-body)",
-                    fontSize: 13,
-                    color: "white",
-                    backgroundColor: "rgba(255,255,255,0.04)",
-                    backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E\")",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 12px center",
-                    backgroundSize: "14px 14px",
-                    outline: "none",
-                    appearance: "none",
-                    WebkitAppearance: "none",
-                  }}
-                />
+          {/* STEP 1 — STAY */}
+          {step === 1 && (
+            <div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                <div>
+                  <label htmlFor="bk-checkin" style={labelStyle}>Check In</label>
+                  <input id="bk-checkin" type="date" value={checkIn} min={toInputDate(today)} onChange={e => setCheckIn(e.currentTarget.value)} onClick={openDatePicker} onFocus={openDatePicker} style={dateStyle(errors.dates)} aria-invalid={!!errors.dates} />
+                </div>
+                <div>
+                  <label htmlFor="bk-checkout" style={labelStyle}>Check Out</label>
+                  <input id="bk-checkout" type="date" value={checkOut} min={checkIn} onChange={e => setCheckOut(e.currentTarget.value)} onClick={openDatePicker} onFocus={openDatePicker} style={dateStyle(errors.dates)} aria-invalid={!!errors.dates} />
+                </div>
               </div>
-            ))}
-          </div>
+              {errorText(errors.dates)}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
-            {[
-              { label: "Guests", opts: ["2 Guests","4 Guests","6 Guests","8 Guests"] },
-              { label: "Villa Type", opts: ["1BR Romance Villa","3BR Family Oasis","4BR Ocean Signature"] }
-            ].map(({ label, opts }) => (
-              <div key={label}>
-                <label style={{ display: "block", fontSize: 9, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 5 }}>{label}</label>
-                <select style={{ width: "100%", height: 42, borderRadius: "var(--r)", border: "1px solid rgba(255,255,255,0.12)", padding: "0 38px 0 11px", fontFamily: "var(--font-body)", fontSize: 13, color: "white", backgroundColor: "#1a1d2b", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5 6 8l4-3.5' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", backgroundSize: "12px 12px", outline: "none", appearance: "none", WebkitAppearance: "none" }}>
-                  {opts.map(o => <option key={o}>{o}</option>)}
-                </select>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 14 }}>
+                <div>
+                  <label htmlFor="bk-guests" style={labelStyle}>Guests</label>
+                  <select id="bk-guests" value={guests} onChange={e => setGuests(e.currentTarget.value)} style={selectStyle(false)}>
+                    {["2 Guests","4 Guests","6 Guests","8 Guests"].map(o => <option key={o}>{o}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="bk-villa" style={labelStyle}>Villa</label>
+                  <select id="bk-villa" value={villaId} onChange={e => setVillaId(e.currentTarget.value)} style={selectStyle(false)}>
+                    {VILLAS.map(v => <option key={v.id} value={v.id}>{v.tag} · {v.type}</option>)}
+                  </select>
+                </div>
               </div>
-            ))}
-          </div>
 
-          <button style={{ width: "100%", height: 48, background: "var(--gold)", color: "#0d0f1a", fontWeight: 700, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", borderRadius: "var(--r)", border: "none", cursor: "pointer", fontFamily: "var(--font-body)", boxShadow: "0 8px 24px rgba(212,175,55,0.26)" }}>
-            Check Availability
-          </button>
-          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", textAlign: "center", marginTop: 10 }}>Free cancellation · 48 hours before arrival</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: 20, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{nights > 0 ? `${nights} night${nights > 1 ? "s" : ""} · ${fmt(nightly)}/night` : "Select your dates"}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: 22, fontWeight: 700, color: "var(--gold)", fontVariantNumeric: "lining-nums tabular-nums", letterSpacing: "-0.01em" }}>{fmt(subtotal)}</span>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2 — DETAILS */}
+          {step === 2 && (
+            <div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                <div>
+                  <label htmlFor="bk-first" style={labelStyle}>First Name</label>
+                  <input id="bk-first" type="text" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} style={fieldStyle(errors.firstName)} aria-invalid={!!errors.firstName} autoComplete="given-name" />
+                  {errorText(errors.firstName)}
+                </div>
+                <div>
+                  <label htmlFor="bk-last" style={labelStyle}>Last Name</label>
+                  <input id="bk-last" type="text" value={lastName} onChange={e => setLastName(e.currentTarget.value)} style={fieldStyle(errors.lastName)} aria-invalid={!!errors.lastName} autoComplete="family-name" />
+                  {errorText(errors.lastName)}
+                </div>
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label htmlFor="bk-email" style={labelStyle}>Email</label>
+                <input id="bk-email" type="email" value={email} onChange={e => setEmail(e.currentTarget.value)} placeholder="you@example.com" style={fieldStyle(errors.email)} aria-invalid={!!errors.email} autoComplete="email" />
+                {errorText(errors.email)}
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label htmlFor="bk-phone" style={labelStyle}>Phone</label>
+                <input id="bk-phone" type="tel" value={phone} onChange={e => setPhone(e.currentTarget.value)} placeholder="+66 ..." style={fieldStyle(errors.phone)} aria-invalid={!!errors.phone} autoComplete="tel" />
+                {errorText(errors.phone)}
+              </div>
+              <div>
+                <label htmlFor="bk-requests" style={labelStyle}>Special Requests <span style={{ color: "rgba(255,255,255,0.25)", fontWeight: 400, letterSpacing: 0, textTransform: "none" }}>(optional)</span></label>
+                <textarea id="bk-requests" value={requests} onChange={e => setRequests(e.currentTarget.value)} rows={3} placeholder="Floating breakfast, airport transfer, celebrations…" style={{ ...fieldStyle(false), height: "auto", padding: "11px 13px", resize: "vertical", lineHeight: 1.6 }} />
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3 — REVIEW & CONFIRM */}
+          {step === 3 && (
+            <div>
+              <div style={{ display: "flex", gap: 14, alignItems: "center", marginBottom: 18 }}>
+                <img src={villa.img} alt={villa.name.replace(/\n/g, " ")} style={{ width: 78, height: 78, objectFit: "cover", flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{villa.type}</div>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: 22, color: "white", fontStyle: "italic", lineHeight: 1 }}>{villa.tag} Villa</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 4 }}>{guests} · {villa.view}</div>
+                </div>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.10)", padding: "18px 20px", display: "grid", gap: 12 }}>
+                {summaryRow("Guest", `${firstName} ${lastName}`.trim() || "—")}
+                {summaryRow("Arrival", prettyDate(checkIn))}
+                {summaryRow("Departure", prettyDate(checkOut))}
+                {summaryRow(`${fmt(nightly)} × ${nights} night${nights > 1 ? "s" : ""}`, fmt(subtotal), { divider: true })}
+                {summaryRow("Taxes & service charge", fmt(taxes))}
+                {summaryRow("Estimated total", fmt(total), { strong: true, divider: true })}
+              </div>
+              {requests.trim() && (
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 14, lineHeight: 1.7 }}>
+                  <span style={{ color: "var(--gold)", textTransform: "uppercase", letterSpacing: "0.14em", fontSize: 9, fontWeight: 700 }}>Requests</span><br/>{requests}
+                </p>
+              )}
+              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 14, lineHeight: 1.6 }}>
+                This is a reservation request — no payment is taken now. Free cancellation up to 48 hours before arrival.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer actions */}
+        <div style={{ padding: "8px 36px 30px", display: "flex", gap: 12, alignItems: "center" }}>
+          {step > 1 ? (
+            <button onClick={goBack} disabled={submitting} style={{ height: 48, padding: "0 22px", border: "1px solid rgba(255,255,255,0.18)", background: "transparent", color: "rgba(255,255,255,0.7)", fontSize: 11, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", borderRadius: "var(--r)", cursor: submitting ? "not-allowed" : "pointer", fontFamily: "var(--font-body)", opacity: submitting ? 0.5 : 1 }}>Back</button>
+          ) : <span style={{ flex: "0 0 auto" }} />}
+
+          {step < STEPS.length ? (
+            <button onClick={goNext} style={{ flex: 1, height: 48, background: "var(--gold)", color: "#0d0f1a", fontWeight: 700, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", borderRadius: "var(--r)", border: "none", cursor: "pointer", fontFamily: "var(--font-body)", boxShadow: "0 8px 24px rgba(212,175,55,0.26)" }}>
+              {step === 1 ? "Continue to Details" : "Review Booking"}
+            </button>
+          ) : (
+            <button onClick={submit} disabled={submitting} aria-busy={submitting} style={{ flex: 1, height: 48, background: "var(--gold)", color: "#0d0f1a", fontWeight: 700, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", borderRadius: "var(--r)", border: "none", cursor: submitting ? "wait" : "pointer", fontFamily: "var(--font-body)", boxShadow: "0 8px 24px rgba(212,175,55,0.26)", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, opacity: submitting ? 0.85 : 1 }}>
+              {submitting && <span style={{ width: 15, height: 15, border: "2px solid rgba(13,15,26,0.3)", borderTopColor: "#0d0f1a", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />}
+              {submitting ? "Confirming…" : "Confirm Reservation"}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -620,7 +1001,11 @@ function Nav({ onBook, scrolled, onMenuOpen, onNavigate }) {
 function Hero({ onBook }) {
   const [loaded, setLoaded] = useState(false);
   const [heroReady, setHeroReady] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const heroVisible = loaded && heroReady;
+  const sectionRef = useRef(null);
+  const videoRef = useRef(null);
+
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 200);
     return () => clearTimeout(t);
@@ -630,18 +1015,49 @@ function Hero({ onBook }) {
     return () => clearTimeout(fallback);
   }, []);
 
+  // (3) Respect reduced-motion → show a still poster instead of the looping film
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = (matches) => { setReduceMotion(matches); if (matches) setHeroReady(true); };
+    apply(mq.matches);
+    const onChange = (e) => apply(e.matches);
+    mq.addEventListener ? mq.addEventListener("change", onChange) : mq.addListener(onChange);
+    return () => { mq.removeEventListener ? mq.removeEventListener("change", onChange) : mq.removeListener(onChange); };
+  }, []);
+
+  // (2) Pause the background film when the hero scrolls off-screen (lightweight Vimeo postMessage — no extra library)
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const post = (method) => {
+      try {
+        const w = videoRef.current && videoRef.current.contentWindow;
+        if (w) w.postMessage(JSON.stringify({ method }), "*");
+      } catch (e) { /* ignore */ }
+    };
+    const io = new IntersectionObserver(([entry]) => post(entry.isIntersecting ? "play" : "pause"), { threshold: 0.12 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section id="about" style={{ position: "relative", height: "100vh", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
-      {/* Video background */}
+    <section ref={sectionRef} id="home" style={{ position: "relative", height: "100vh", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
+      {/* Video background (or still poster when reduced-motion is preferred) */}
       <div style={{ position: "absolute", inset: "-10% 0", overflow: "hidden", pointerEvents: "none", transform: heroReady ? "scale(1)" : "scale(1.04)", transition: "transform 1400ms cubic-bezier(0.25,0.46,0.45,0.94)" }}>
-        <iframe
-          src="https://player.vimeo.com/video/1185218868?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&background=1"
-          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          title="The Azure Phuket"
-          onLoad={() => setTimeout(() => setHeroReady(true), 220)}
-          style={{ position: "absolute", top: "50%", left: "50%", width: "177.78vh", minWidth: "100%", height: "56.25vw", minHeight: "100%", transform: "translate(-50%, -50%)", border: 0 }}
-        />
+        {reduceMotion ? (
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: "url('../../assets/images/phuket1.png')", backgroundSize: "cover", backgroundPosition: "center 30%" }} />
+        ) : (
+          <iframe
+            ref={videoRef}
+            src="https://player.vimeo.com/video/1185218868?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&background=1"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            title="The Azure Phuket"
+            onLoad={() => setTimeout(() => setHeroReady(true), 220)}
+            style={{ position: "absolute", top: "50%", left: "50%", width: "177.78vh", minWidth: "100%", height: "56.25vw", minHeight: "100%", transform: "translate(-50%, -50%)", border: 0 }}
+          />
+        )}
       </div>
       <div
         style={{
@@ -677,6 +1093,11 @@ function Hero({ onBook }) {
       <div style={{ position: "absolute", inset: 0, zIndex: 3, background: "linear-gradient(to top, rgba(13,15,26,0.92) 0%, rgba(13,15,26,0.4) 45%, rgba(13,15,26,0.12) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, zIndex: 3, background: "radial-gradient(ellipse at bottom center, rgba(29,35,64,0.5), transparent 70%)" }} />
 
+      {/* (4) Slow ambient gold light-sweep — one lightweight layer, paused under reduced-motion */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: 3, overflow: "hidden", pointerEvents: "none" }}>
+        <div className="hero-sheen" style={{ position: "absolute", top: "-20%", left: 0, width: "45%", height: "140%", background: "linear-gradient(90deg, transparent, rgba(255,247,218,0.08) 40%, rgba(212,175,55,0.05) 60%, transparent)", filter: "blur(6px)", animation: "heroSheen 9s ease-in-out 1.6s infinite", willChange: "transform" }} />
+      </div>
+
       {/* Left vertical labels */}
       <div style={{ position: "absolute", zIndex: 4, left: 48, top: "50%", transform: heroVisible ? "translateY(-50%)" : "translateY(calc(-50% + 22px))", display: "flex", flexDirection: "column", gap: 8, opacity: heroVisible ? 1 : 0, transition: "opacity 1200ms 460ms cubic-bezier(0.22,0.61,0.36,1), transform 1400ms cubic-bezier(0.22,0.61,0.36,1)" }}>
         {["Private", "Luxury", "Phuket"].map((l, i) => (
@@ -691,10 +1112,14 @@ function Hero({ onBook }) {
           Bang Tao Beach · Phuket, Thailand
         </p>
 
-        {/* Big tracked headline */}
-        <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(2.6rem,4.5vw,5rem)", letterSpacing: "0.22em", textTransform: "uppercase", color: "white", lineHeight: 1, marginBottom: 20, opacity: heroVisible ? 1 : 0, transform: heroVisible ? "none" : "translateY(22px)", transition: "opacity 1180ms 620ms cubic-bezier(0.22,0.61,0.36,1), transform 1320ms cubic-bezier(0.22,0.61,0.36,1)" }}>
-          Private
-          <span style={{ fontStyle: "italic", color: "var(--gold-light)", letterSpacing: "0.16em" }}> Escape</span>
+        {/* Big tracked headline — kinetic word reveal */}
+        <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(2.6rem,4.5vw,5rem)", letterSpacing: "0.22em", textTransform: "uppercase", color: "white", lineHeight: 1, marginBottom: 20 }}>
+          <span style={{ display: "inline-block", overflow: "hidden", verticalAlign: "top", paddingBottom: "0.08em" }}>
+            <span style={{ display: "inline-block", transform: heroVisible ? "translateY(0)" : "translateY(115%)", opacity: heroVisible ? 1 : 0, transition: "transform 1000ms 520ms cubic-bezier(0.22,0.61,0.36,1), opacity 1000ms 520ms ease" }}>Private</span>
+          </span>
+          <span style={{ display: "inline-block", overflow: "hidden", verticalAlign: "top", marginLeft: "0.3em", paddingBottom: "0.08em", paddingRight: "0.12em" }}>
+            <span style={{ display: "inline-block", fontStyle: "italic", letterSpacing: "0.16em", backgroundImage: "linear-gradient(100deg, var(--gold-light) 0%, #fff7da 28%, var(--gold) 52%, var(--gold-light) 80%)", backgroundSize: "220% auto", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent", transform: heroVisible ? "translateY(0)" : "translateY(115%)", opacity: heroVisible ? 1 : 0, transition: "transform 1000ms 700ms cubic-bezier(0.22,0.61,0.36,1), opacity 1000ms 700ms ease", animation: heroVisible ? "goldSweepOnce 1800ms 1500ms ease-out both" : "none" }}>Escape</span>
+          </span>
         </h1>
 
         {/* Sub line */}
@@ -738,6 +1163,94 @@ function FeaturesStrip() {
         ))}
       </div>
     </div>
+  );
+}
+
+/* ── THE AZURE STORY ────────────────────────────────── */
+function StorySection() {
+  const sectionRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { backgroundRef, contentRef, backgroundSpeed: 0.10, contentSpeed: 0.04 });
+
+  return (
+    <section ref={sectionRef} id="about" style={{ background: "var(--paper)", padding: "120px 0", position: "relative", overflow: "hidden" }}>
+      {/* Warm paper texture — drifts gently with scroll, feathered on every edge */}
+      <div
+        ref={backgroundRef}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "-14% -6%",
+          opacity: 0.12,
+          pointerEvents: "none",
+          backgroundImage: "linear-gradient(180deg, rgba(248,246,241,0.42), rgba(248,246,241,0.86)), url('../../assets/images/lite-texture.jpg')",
+          backgroundRepeat: "no-repeat, no-repeat",
+          backgroundSize: "cover, cover",
+          backgroundPosition: "center, center",
+          mixBlendMode: "multiply",
+          maskImage: "radial-gradient(115% 80% at 50% 42%, #000 38%, transparent 88%)",
+          WebkitMaskImage: "radial-gradient(115% 80% at 50% 42%, #000 38%, transparent 88%)",
+          willChange: "transform",
+        }}
+      />
+      {/* Fine grain — adds tactile depth without hurting readability */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: 0.05,
+          pointerEvents: "none",
+          mixBlendMode: "multiply",
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
+      {/* Soft gold light accent */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "-12%",
+          right: "-6%",
+          width: 540,
+          height: 540,
+          pointerEvents: "none",
+          background: "radial-gradient(circle, rgba(212,175,55,0.11), transparent 62%)",
+        }}
+      />
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 1, willChange: "transform" }}>
+        {/* Intro */}
+        <div className="reveal" style={{ maxWidth: 720, marginBottom: 84 }}>
+          <span className="section-eye" style={{ color: "var(--ink)" }}>The Azure Story</span>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.6rem,5vw,4.6rem)", fontWeight: 500, color: "var(--navy)", lineHeight: 1, marginBottom: 24 }}>
+            A private island retreat, <span style={{ fontStyle: "italic" }}>shaped around you</span>
+          </h2>
+          <p style={{ fontSize: 15, color: "rgba(29,35,64,0.6)", lineHeight: 1.9, maxWidth: "60ch" }}>
+            The Azure Phuket was imagined as the opposite of the grand hotel — intimate, unhurried, and entirely your own. Three ideas guide everything we do.
+          </p>
+        </div>
+
+        {/* Chapters */}
+        <div style={{ display: "grid", gap: 72 }}>
+          {STORY_CHAPTERS.map((c, i) => {
+            const flip = i % 2 === 1;
+            return (
+              <div key={c.n} className="story-row reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
+                <div className="story-media" style={{ order: flip ? 2 : 1, overflow: "hidden", height: 400 }}>
+                  <img src={c.img} alt={c.title} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                </div>
+                <div className="story-text" style={{ order: flip ? 1 : 2 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: 64, fontWeight: 500, color: "rgba(212,175,55,0.55)", lineHeight: 1, marginBottom: 6 }}>{c.n}</div>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem,3vw,2.8rem)", fontWeight: 500, fontStyle: "italic", color: "var(--navy)", lineHeight: 1.05, marginBottom: 18 }}>{c.title}</h3>
+                  <p style={{ fontSize: 14, color: "rgba(29,35,64,0.6)", lineHeight: 1.95, maxWidth: "46ch" }}>{c.body}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -876,14 +1389,14 @@ function VillasSection({ onBook }) {
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", paddingTop: 24, borderTop: "1px solid rgba(29,35,64,0.10)" }}>
                 <div>
                   <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 2 }}>From</div>
-                  <div style={{ fontFamily: "var(--font-body)", color: "var(--gold)", lineHeight: 1, letterSpacing: "-0.02em" }}>
+                  <div style={{ fontFamily: "var(--font-body)", color: "var(--gold)", lineHeight: 1, letterSpacing: "-0.02em", fontVariantNumeric: "lining-nums tabular-nums" }}>
                     <span style={{ fontSize: 16, fontWeight: 400, verticalAlign: "super" }}>{ratePlan.price.replace(/[\d,]+/, '')}</span>
                     <span style={{ fontSize: 36, fontWeight: 700 }}>{ratePlan.price.replace(/[^\d,]/g, '')}</span>
                     <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(29,35,64,0.45)", marginLeft: 8, letterSpacing: "0.08em", textTransform: "uppercase" }}>{ratePlan.suffix}</span>
                   </div>
                   <div style={{ fontSize: 10, color: "rgba(29,35,64,0.4)", marginTop: 2 }}>{ratePlan.note}</div>
                 </div>
-                <button onClick={onBook} style={{ padding: "13px 28px", background: "var(--gold)", color: "#0d0f1a", border: "none", borderRadius: "var(--r)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--font-body)" }}>
+                <button onClick={() => onBook(villa.id)} style={{ padding: "13px 28px", background: "var(--gold)", color: "#0d0f1a", border: "none", borderRadius: "var(--r)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--font-body)" }}>
                   Reserve This Villa
                 </button>
             </div>
@@ -1000,6 +1513,156 @@ function ExperienceSection() {
   );
 }
 
+/* ── TESTIMONIALS / SOCIAL PROOF ─────────────────────── */
+function Testimonials() {
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { contentRef, contentSpeed: 0.04 });
+
+  const Stars = () => (
+    <div style={{ display: "flex", gap: 3, marginBottom: 16 }} aria-label="5 out of 5 stars">
+      {[0,1,2,3,4].map(i => (
+        <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="var(--gold)" aria-hidden="true">
+          <path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 21.2l1.4-6.8L2.2 9.7l6.9-.7z"/>
+        </svg>
+      ))}
+    </div>
+  );
+
+  return (
+    <section
+      ref={sectionRef}
+      id="reviews"
+      style={{
+        background: "linear-gradient(180deg, #111522 0%, #0d0f1a 100%)",
+        padding: "112px 0",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 80% 0%, rgba(212,175,55,0.08), transparent 38%), radial-gradient(circle at 8% 90%, rgba(175,238,238,0.05), transparent 30%)", pointerEvents: "none" }} />
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 1, willChange: "transform" }}>
+        {/* Header */}
+        <div className="reveal" style={{ textAlign: "center", marginBottom: 56 }}>
+          <span className="section-eye" style={{ margin: "0 auto" }}>Guest Stories</span>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.6rem,4.5vw,4.4rem)", fontWeight: 500, color: "white", lineHeight: 0.98 }}>
+            Trusted by travellers<br/><span style={{ fontStyle: "italic", color: "var(--gold-light)" }}>who value privacy</span>
+          </h2>
+        </div>
+
+        {/* Trust stats */}
+        <div className="reveal reveal-delay-1" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 0, marginBottom: 64 }}>
+          {TRUST_STATS.map((s, i) => (
+            <div key={s.label} style={{ padding: "0 44px", borderLeft: i > 0 ? "1px solid rgba(255,255,255,0.10)" : "none", textAlign: "center" }}>
+              <div style={{ fontFamily: "var(--font-body)", color: "var(--gold)", lineHeight: 1, display: "flex", alignItems: "baseline", justifyContent: "center", gap: 3, fontVariantNumeric: "lining-nums tabular-nums" }}>
+                <span style={{ fontSize: 48, fontWeight: 700, letterSpacing: "-0.02em" }}>{s.value}</span>
+                <span style={{ fontSize: 17, fontWeight: 600, color: "rgba(212,175,55,0.7)" }}>{s.suffix}</span>
+              </div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 8 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Testimonial cards */}
+        <div className="tm-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+          {TESTIMONIALS.map((t, i) => (
+            <figure key={t.name} className={`reveal reveal-delay-${i}`} style={{ margin: 0, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "32px 30px", display: "flex", flexDirection: "column", height: "100%" }}>
+              <Stars />
+              <blockquote style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: 19, fontStyle: "italic", color: "rgba(255,255,255,0.88)", lineHeight: 1.55, marginBottom: "auto" }}>
+                “{t.quote}”
+              </blockquote>
+              <figcaption style={{ marginTop: 26, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "white" }}>{t.name}</div>
+                <div style={{ fontSize: 11, color: "var(--gold)", letterSpacing: "0.06em", marginTop: 3 }}>{t.role}</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.38)", marginTop: 2 }}>{t.location}</div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── GALLERY + LIGHTBOX ─────────────────────────────── */
+function Gallery() {
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
+  useSectionParallax(sectionRef, { contentRef, contentSpeed: 0.035 });
+
+  const [index, setIndex] = useState(null);
+  const open = index !== null;
+  const close = () => setIndex(null);
+  const prev = () => setIndex(i => (i + GALLERY.length - 1) % GALLERY.length);
+  const next = () => setIndex(i => (i + 1) % GALLERY.length);
+
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => {
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  // Bento spans (column-only) tuned so 8 tiles fill exactly 3 flush rows — clean bottom edge, no gaps
+  const spans = ["span 1 / span 2", "", "", "", "span 1 / span 2", "", "span 1 / span 2", "span 1 / span 2"];
+  const arrowStyle = (side) => ({
+    position: "absolute", [side]: 32, top: "50%", transform: "translateY(-50%)",
+    width: 48, height: 48, border: "1px solid rgba(255,255,255,0.2)", color: "white",
+    fontSize: 22, lineHeight: 1, background: "rgba(8,10,18,0.4)", cursor: "pointer", zIndex: 2,
+  });
+
+  return (
+    <section ref={sectionRef} id="gallery" style={{ background: "var(--ivory)", padding: "120px 0", position: "relative", overflow: "hidden" }}>
+      <div ref={contentRef} style={{ maxWidth: 1280, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 1, willChange: "transform" }}>
+        <div className="reveal" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 48, gap: 24 }}>
+          <div>
+            <span className="section-eye">Gallery</span>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.8rem,5vw,4.8rem)", fontWeight: 500, color: "var(--navy)", lineHeight: 0.95 }}>
+              A glimpse of<br/><span style={{ fontStyle: "italic" }}>The Azure</span>
+            </h2>
+          </div>
+          <p style={{ fontSize: 13, color: "rgba(29,35,64,0.5)", maxWidth: "26ch", textAlign: "right", lineHeight: 1.75 }}>
+            Tap any image to explore the villas, the island, and the spaces in between
+          </p>
+        </div>
+
+        <div className="gallery-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "260px", gridAutoFlow: "dense", gap: 12 }}>
+          {GALLERY.map((g, i) => (
+            <button key={i} onClick={() => setIndex(i)} aria-label={`View image: ${g.caption}`} style={{ gridArea: spans[i] || "auto", position: "relative", overflow: "hidden", border: "none", padding: 0, cursor: "pointer", background: "#0d0f1a" }}>
+              <img src={g.img} alt={g.caption} loading="lazy" className="gallery-img" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94)" }} />
+              <span className="gallery-veil" style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(13,15,26,0.55), transparent 55%)", opacity: 0, transition: "opacity 400ms ease" }} />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {open && (
+        <div onClick={close} role="dialog" aria-modal="true" aria-label="Image gallery" style={{ position: "fixed", inset: 0, zIndex: 900, background: "rgba(8,10,18,0.95)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", animation: "modalIn 320ms ease forwards" }}>
+          <button onClick={close} aria-label="Close gallery" style={{ position: "absolute", top: 28, right: 32, width: 44, height: 44, border: "1px solid rgba(255,255,255,0.2)", color: "white", fontSize: 20, lineHeight: 1, background: "none", cursor: "pointer", zIndex: 2 }}>×</button>
+          <button onClick={e => { e.stopPropagation(); prev(); }} aria-label="Previous image" style={arrowStyle("left")}>‹</button>
+          <figure onClick={e => e.stopPropagation()} style={{ margin: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+            <img src={GALLERY[index].img} alt={GALLERY[index].caption} style={{ maxWidth: "84vw", maxHeight: "72vh", objectFit: "contain", display: "block", boxShadow: "0 30px 80px rgba(0,0,0,0.5)" }} />
+            <figcaption style={{ display: "flex", alignItems: "center", gap: 16, color: "rgba(255,255,255,0.72)", fontSize: 13 }}>
+              <span style={{ color: "var(--gold)", fontVariantNumeric: "tabular-nums", letterSpacing: "0.1em" }}>{String(index + 1).padStart(2, "0")} / {String(GALLERY.length).padStart(2, "0")}</span>
+              <span style={{ width: 1, height: 12, background: "rgba(255,255,255,0.25)" }} />
+              <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 16, color: "white" }}>{GALLERY[index].caption}</span>
+            </figcaption>
+          </figure>
+          <button onClick={e => { e.stopPropagation(); next(); }} aria-label="Next image" style={arrowStyle("right")}>›</button>
+        </div>
+      )}
+    </section>
+  );
+}
+
 /* ── FULL-BLEED IMAGE ────────────────────────────────── */
 function FullBleedQuote() {
   const sectionRef = useRef(null);
@@ -1008,7 +1671,7 @@ function FullBleedQuote() {
   useSectionParallax(sectionRef, { backgroundRef, contentRef, backgroundSpeed: 0.16, contentSpeed: 0.05 });
 
   return (
-    <section ref={sectionRef} id="gallery" style={{ position: "relative", height: 520, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+    <section ref={sectionRef} id="moments" style={{ position: "relative", height: 520, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
       <div ref={backgroundRef} style={{ position: "absolute", inset: "-10% 0", backgroundImage: "url('../../assets/images/phuket6.png')", backgroundSize: "cover", backgroundPosition: "center 40%", willChange: "transform" }} />
       <div style={{ position: "absolute", inset: 0, background: "rgba(13,15,26,0.42)" }} />
       <div ref={contentRef} className="reveal" style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 48px", willChange: "transform" }}>
@@ -1111,73 +1774,138 @@ function BackToTopButton({ visible, onClick }) {
   );
 }
 
-function SpecialOfferButton({ visible, onClick }) {
+function SpecialOfferButton({ visible, onClick, onClose }) {
+  const [hover, setHover] = useState(false);
   return (
-    <button
-      onClick={onClick}
-      aria-label="Open special offers"
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       style={{
         position: "fixed",
         left: 44,
         bottom: 28,
         zIndex: 419,
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "14px 22px",
-        borderRadius: "0",
-        border: "1px solid var(--gold)",
-        background: "var(--gold)",
-        color: "#0d0f1a",
-        fontSize: 11,
-        fontWeight: 700,
-        letterSpacing: "0.16em",
-        textTransform: "uppercase",
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(18px)",
         pointerEvents: visible ? "auto" : "none",
-        boxShadow: "0 14px 30px rgba(212,175,55,0.18)",
-        transition: "opacity 420ms cubic-bezier(0.22,0.61,0.36,1), transform 520ms cubic-bezier(0.22,0.61,0.36,1), background 220ms ease, border-color 220ms ease, box-shadow 220ms ease",
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.background = "#e0bb47";
-        e.currentTarget.style.borderColor = "#e0bb47";
-        e.currentTarget.style.boxShadow = "0 18px 36px rgba(212,175,55,0.24)";
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.background = "var(--gold)";
-        e.currentTarget.style.borderColor = "var(--gold)";
-        e.currentTarget.style.boxShadow = "0 14px 30px rgba(212,175,55,0.18)";
+        transition: "opacity 420ms cubic-bezier(0.22,0.61,0.36,1), transform 520ms cubic-bezier(0.22,0.61,0.36,1)",
       }}
     >
-      <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 40, height: 40 }}>
-        <img
-          src="../../assets/images/gift-box-offer.svg"
-          alt=""
-          aria-hidden="true"
-          style={{
-            width: 36,
-            height: 36,
-            display: "block",
-            objectFit: "contain",
-            transformOrigin: "50% 70%",
-            filter: "brightness(0) saturate(100%)",
-            animation: "giftShake 2.4s ease-in-out infinite",
-          }}
-        />
-      </span>
-      Special Offer
-    </button>
+      {/* Soft animated gold glow behind the button */}
+      <span
+        className="offer-glow"
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "-10px -12px",
+          zIndex: 0,
+          pointerEvents: "none",
+          background: "linear-gradient(120deg, rgba(212,175,55,0.85), rgba(244,231,176,0.55) 45%, rgba(212,175,55,0.85))",
+          backgroundSize: "200% 200%",
+          filter: "blur(15px)",
+          opacity: hover ? 0.6 : 0,
+          animation: hover ? "offerGlow 3.6s ease-in-out infinite" : "none",
+          transition: "opacity 360ms ease",
+        }}
+      />
+
+      <button
+        onClick={onClick}
+        aria-label="Open special offers"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "14px 22px",
+          borderRadius: "0",
+          border: "1px solid var(--gold)",
+          background: "var(--gold)",
+          color: "#0d0f1a",
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          fontFamily: "var(--font-body)",
+          cursor: "pointer",
+          boxShadow: "0 14px 30px rgba(212,175,55,0.18)",
+          transition: "background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease",
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = "#e0bb47";
+          e.currentTarget.style.borderColor = "#e0bb47";
+          e.currentTarget.style.boxShadow = "0 18px 42px rgba(212,175,55,0.34)";
+          e.currentTarget.style.transform = "translateY(-1px)";
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = "var(--gold)";
+          e.currentTarget.style.borderColor = "var(--gold)";
+          e.currentTarget.style.boxShadow = "0 14px 30px rgba(212,175,55,0.18)";
+          e.currentTarget.style.transform = "translateY(0)";
+        }}
+      >
+        <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 40, height: 40 }}>
+          <img
+            src="../../assets/images/gift-box-offer.svg"
+            alt=""
+            aria-hidden="true"
+            style={{
+              width: 36,
+              height: 36,
+              display: "block",
+              objectFit: "contain",
+              transformOrigin: "50% 70%",
+              filter: "brightness(0) saturate(100%)",
+              animation: hover ? "giftShake 2.4s ease-in-out infinite" : "none",
+            }}
+          />
+        </span>
+        Special Offer
+      </button>
+
+      {/* Dismiss button */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onClose && onClose(); }}
+        aria-label="Dismiss special offer"
+        style={{
+          position: "absolute",
+          top: -9,
+          right: -9,
+          zIndex: 2,
+          width: 22,
+          height: 22,
+          borderRadius: "50%",
+          background: "rgba(8,10,18,0.92)",
+          border: "1px solid rgba(212,175,55,0.55)",
+          color: "rgba(255,255,255,0.82)",
+          fontSize: 12,
+          lineHeight: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          padding: 0,
+          transition: "background 180ms ease, color 180ms ease, transform 180ms ease",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = "#0d0f1a"; e.currentTarget.style.color = "var(--gold)"; e.currentTarget.style.transform = "scale(1.12)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "rgba(8,10,18,0.92)"; e.currentTarget.style.color = "rgba(255,255,255,0.82)"; e.currentTarget.style.transform = "scale(1)"; }}
+      >
+        ×
+      </button>
+    </div>
   );
 }
 
 /* ── APP ────────────────────────────────────────────── */
 function App() {
   const [booking, setBooking] = useState(false);
+  const [bookingVilla, setBookingVilla] = useState(null);
   const [promotionOpen, setPromotionOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [offerVisible, setOfferVisible] = useState(true);
 
   useScrollReveal();
 
@@ -1209,7 +1937,11 @@ function App() {
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        setPromotionOpen(false);
+        // Booking modal manages its own Escape so it can guard unsaved data
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -1224,25 +1956,33 @@ function App() {
     }
   }, []);
 
+  const openBooking = useCallback((villaId) => {
+    setBookingVilla(typeof villaId === "string" ? villaId : null);
+    setBooking(true);
+  }, []);
+
   return (
     <>
       <Nav
-        onBook={() => setBooking(true)}
+        onBook={() => openBooking()}
         scrolled={scrolled}
         onMenuOpen={() => setMenuOpen(true)}
         onNavigate={handleNavigate}
       />
-      <Hero onBook={() => setBooking(true)} />
+      <Hero onBook={() => openBooking()} />
       <FeaturesStrip />
-      <VillasSection onBook={() => setBooking(true)} />
+      <StorySection />
+      <VillasSection onBook={openBooking} />
         <ExperienceSection />
+        <Testimonials />
+        <Gallery />
         <FullBleedQuote />
-        <Footer onBook={() => setBooking(true)} />
-        <SpecialOfferButton visible={true} onClick={() => setPromotionOpen(true)} />
+        <Footer onBook={() => openBooking()} />
+        <SpecialOfferButton visible={offerVisible} onClick={() => setPromotionOpen(true)} onClose={() => setOfferVisible(false)} />
         <BackToTopButton visible={showBackToTop} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} />
-        {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} onNavigate={handleNavigate} onBook={() => setBooking(true)} />}
-        {promotionOpen && <PromotionModal onClose={() => setPromotionOpen(false)} onBook={() => setBooking(true)} />}
-        {booking && <BookingModal onClose={() => setBooking(false)} />}
+        {menuOpen && <MenuOverlay onClose={() => setMenuOpen(false)} onNavigate={handleNavigate} onBook={() => openBooking()} />}
+        {promotionOpen && <PromotionModal onClose={() => setPromotionOpen(false)} onBook={() => openBooking()} />}
+        {booking && <BookingModal onClose={() => setBooking(false)} initialVillaId={bookingVilla} />}
       </>
     );
 }

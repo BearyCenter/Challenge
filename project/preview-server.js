@@ -25,7 +25,13 @@ const contentTypes = {
 
 function safePathFromUrl(urlPath) {
   const pathname = decodeURIComponent((urlPath || "/").split("?")[0]);
-  const normalizedPath = pathname === "/" ? "/ui_kits/website/design-system.html" : pathname;
+  const routes = {
+    "/": "/ui_kits/website/index.html",
+    "/index.html": "/ui_kits/website/index.html",
+    "/design-system": "/ui_kits/website/design-system.html",
+    "/design-system.html": "/ui_kits/website/design-system.html",
+  };
+  const normalizedPath = routes[pathname] || pathname;
   const absolutePath = path.resolve(rootDir, `.${normalizedPath}`);
 
   if (!absolutePath.startsWith(rootDir)) {
