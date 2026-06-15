@@ -1,3 +1,5 @@
 # robots.txt — The Azure Phuket
 User-agent: *
 Allow: /
+
+Sitemap: https://uxui-gamma.vercel.app/sitemap.xml

@@ -21,6 +21,7 @@ const contentTypes = {
   ".txt": "text/plain; charset=utf-8",
   ".woff": "font/woff",
   ".woff2": "font/woff2",
+  ".xml": "application/xml; charset=utf-8",
 };
 
 function safePathFromUrl(urlPath) {
