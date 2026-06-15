@@ -1,0 +1,3 @@
+# robots.txt — The Azure Phuket
+User-agent: *
+Allow: /
